@@ -572,12 +572,12 @@ export const REPORT_TEMPLATE = `
             height: 11in !important; 
             width: 8.5in !important;
             padding: 0 !important; /* Reset any page padding */
-            margin: 0 !important; /* Override .page auto margins explicitly if needed for print */
+            margin: 0 auto !important; /* FORCE CENTERING FOR PRINT */
         }
         .memo-meta {
             border-bottom: 2px solid #000;
-            padding-bottom: 4mm;
-            margin-bottom: 6mm;
+            padding-bottom: 2mm; 
+            margin-bottom: 3mm; /* Reduced from 6mm */
             flex-shrink: 0;
         }
 
@@ -867,7 +867,7 @@ export const REPORT_TEMPLATE = `
 
     <!-- 2.5 TRL -->
     <div class="page">
-        <div class="header">
+        <div class="header" style="height:12mm; margin-top:5mm; margin-bottom:4mm; padding-bottom:1mm;">
             <div class="header-left">Tech Forensics</div>
             <div class="header-right">2.5 TRL Assessment</div>
         </div>
@@ -913,7 +913,7 @@ export const REPORT_TEMPLATE = `
 
     <!-- 3.1 METHODOLOGY -->
     <div class="page">
-        <div class="header">
+        <div class="header" style="height:12mm; margin-top:5mm; margin-bottom:4mm; padding-bottom:1mm;">
             <div class="header-left">IP Analysis</div>
             <div class="header-right">3.1 Methodology</div>
         </div>
@@ -1171,7 +1171,7 @@ export const REPORT_TEMPLATE = `
 
     <!-- 4.5 BEACHHEAD -->
     <div class="page">
-        <div class="header">
+        <div class="header" style="height:12mm; margin-top:5mm; margin-bottom:4mm; padding-bottom:1mm;">
             <h3>Market Dynamics</h3>
             <div style="font-family:var(--font-display); font-size:11pt; color:var(--color-primary);">4.5 Beachhead Strategy</div>
         </div>
@@ -1467,7 +1467,7 @@ export const REPORT_TEMPLATE = `
         <div class="content" style="display:flex; justify-content:center;">
             <div class="memo-classic" style="width: 100%;">
                 <div class="memo-meta">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8mm;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4mm;">
                         <div style="font-family:var(--font-display); font-weight:900; font-size:18pt; text-transform:uppercase; letter-spacing:-0.5px; color:#000;">Arcus TTO</div>
                         <div style="text-align:right;">
                             <div style="font-size:7pt; font-weight:700; text-transform:uppercase; color:#94a3b8; letter-spacing:1px;">Internal Memo</div>
@@ -1475,11 +1475,11 @@ export const REPORT_TEMPLATE = `
                         </div>
                     </div>
                 
-                    <table class="memo-meta-table" style="font-family:'Georgia',serif; font-size:10pt;">
-                        <tr><td style="width:15mm; font-weight:700; color:#64748b;">TO:</td><td style="font-weight:700;">Investment Committee; {{CLIENT_NAME}}</td></tr>
-                        <tr><td style="width:15mm; font-weight:700; color:#64748b;">FROM:</td><td>Director of Technology Transfer</td></tr>
-                        <tr><td style="width:15mm; font-weight:700; color:#64748b;">DATE:</td><td>{{REPORT_DATE}}</td></tr>
-                        <tr><td style="width:15mm; font-weight:700; color:#64748b;">RE:</td><td style="font-weight:700; text-decoration:underline;">COMMERCIALIZATION VIABILITY ASSESSMENT -- {{TECHNOLOGY_NAME}}</td></tr>
+                    <table class="memo-meta-table" style="font-family:'Georgia',serif; font-size:9pt; line-height: 1.2;">
+                        <tr><td style="width:12mm; font-weight:700; color:#64748b; padding-bottom: 1mm;">TO:</td><td style="font-weight:700; padding-bottom: 1mm;">Investment Committee; {{CLIENT_NAME}}</td></tr>
+                        <tr><td style="width:12mm; font-weight:700; color:#64748b; padding-bottom: 1mm;">FROM:</td><td style="padding-bottom: 1mm;">Director of Technology Transfer</td></tr>
+                        <tr><td style="width:12mm; font-weight:700; color:#64748b; padding-bottom: 1mm;">DATE:</td><td style="padding-bottom: 1mm;">{{REPORT_DATE}}</td></tr>
+                        <tr><td style="width:12mm; font-weight:700; color:#64748b; padding-bottom: 1mm;">RE:</td><td style="font-weight:700; text-decoration:underline; padding-bottom: 1mm;">COMMERCIALIZATION VIABILITY ASSESSMENT -- {{TECHNOLOGY_NAME}}</td></tr>
                     </table>
                 </div>
                 
