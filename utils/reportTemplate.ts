@@ -29,7 +29,7 @@ export const REPORT_TEMPLATE = `
         }
 
         @page {
-            size: letter; /* Letter Standard */
+            size: 8.5in 11in;
             margin: 0;
         }
         
@@ -44,9 +44,9 @@ export const REPORT_TEMPLATE = `
             background-color: #525659; /* Gray background for web preview */
             margin: 0;
             padding: 0;
-            font-size: 9pt;
+            font-size: 8.5pt;
             color: var(--color-text);
-            line-height: 1.6;
+            line-height: 1.45;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -65,6 +65,12 @@ export const REPORT_TEMPLATE = `
         }
 
         @media print {
+            html, body {
+                width: 8.5in;
+                height: 11in;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
             body { background: none; }
             .page { 
                 box-shadow: none; 
@@ -73,7 +79,7 @@ export const REPORT_TEMPLATE = `
                 height: 11in;
                 page-break-after: always;
                 border: none;
-                overflow: visible !important;
+                overflow: hidden !important; /* Ensure strict clipping */
             }
             .content {
                 overflow: visible !important;
@@ -82,12 +88,12 @@ export const REPORT_TEMPLATE = `
 
         /* --- LAYOUT UTILS --- */
         .header {
-            padding: 15mm 15mm 5mm 15mm;
+            padding: 10mm 15mm 5mm 15mm;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             border-bottom: 2px solid var(--color-navy);
-            margin-bottom: 8mm;
+            margin-bottom: 5mm;
             flex-shrink: 0;
         }
         
@@ -98,7 +104,7 @@ export const REPORT_TEMPLATE = `
         }
 
         .footer {
-            padding: 5mm 15mm 10mm 15mm;
+            padding: 5mm 15mm 5mm 15mm;
             border-top: 1px solid var(--color-border);
             display: flex;
             justify-content: space-between;
@@ -119,7 +125,7 @@ export const REPORT_TEMPLATE = `
             font-weight: 700;
             line-height: 1.1;
             letter-spacing: -0.5px;
-            margin-bottom: 10mm;
+            margin-bottom: 8mm;
         }
 
         h2 {
@@ -127,7 +133,7 @@ export const REPORT_TEMPLATE = `
             font-size: 20pt;
             font-weight: 600;
             color: var(--color-navy);
-            margin-bottom: 6mm;
+            margin-bottom: 4mm;
             position: relative;
             padding-left: 12px;
             border-left: 3px solid var(--color-accent);
@@ -157,9 +163,9 @@ export const REPORT_TEMPLATE = `
         }
 
         p {
-            font-size: 9pt;
+            font-size: 8.5pt;
             color: var(--color-slate);
-            margin-bottom: 4mm;
+            margin-bottom: 3mm;
             text-align: justify;
             line-height: 1.6;
         }
