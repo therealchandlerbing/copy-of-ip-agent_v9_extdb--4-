@@ -15,7 +15,7 @@
 **A high-fidelity platform for generating investor-grade Innovation Compass Reports**
 *Deep technical forensics • IP landscape analysis • Market reality stress-testing*
 
-[Getting Started](#-getting-started) • [Architecture](#-architecture-overview) • [Features](#-key-features) • [Tutorial](#-usage-tutorial)
+[Getting Started](#getting-started) • [Architecture](#architecture-overview) • [Features](#key-features) • [Tutorial](#usage-tutorial)
 
 </div>
 
@@ -23,20 +23,20 @@
 
 ## Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Technology Stack](#-technology-stack)
-- [Architecture Overview](#-architecture-overview)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Usage Tutorial](#-usage-tutorial)
-- [Component Reference](#-component-reference)
-- [Data Models](#-data-models)
-- [AI Integration](#-ai-integration--multi-agent-system)
-- [Report Schema](#-report-schema)
-- [Configuration](#-configuration)
-- [Development Guide](#-development-guide)
-- [Troubleshooting](#-troubleshooting)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Architecture Overview](#architecture-overview)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Usage Tutorial](#usage-tutorial)
+- [Component Reference](#component-reference)
+- [Data Models](#data-models)
+- [AI Integration](#ai-integration--multi-agent-system)
+- [Report Schema](#report-schema)
+- [Configuration](#configuration)
+- [Development Guide](#development-guide)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -195,9 +195,9 @@
 │  │   ┌──────────────────────┐  ┌──────────────────────┐                        │   │
 │  │   │   Google Gemini AI   │  │   Google Search      │                        │   │
 │  │   │                      │  │       Tool           │                        │   │
-│  │   │  • gemini-3-flash    │  │                      │                        │   │
-│  │   │  • gemini-3-pro      │  │  Market Intelligence │                        │   │
-│  │   │    -image-preview    │  │  Real-time Data      │                        │   │
+│  │   │  • gemini-3-pro-preview      │  │                │                        │   │
+│  │   │  • gemini-3-flash-preview   │  │  Market Intel  │                        │   │
+│  │   │  • gemini-3-pro-image-prev  │  │  Real-time Data│                        │   │
 │  │   └──────────────────────┘  └──────────────────────┘                        │   │
 │  │                                                                              │   │
 │  └─────────────────────────────────────────────────────────────────────────────┘   │
@@ -359,9 +359,9 @@ cd innovation-compass
 npm install
 
 # 3. Configure environment
-cp .env.local.example .env.local
-# Edit .env.local and add your Gemini API key:
-# GEMINI_API_KEY=your_api_key_here
+# Create a .env.local file and add your Gemini API key:
+echo "GEMINI_API_KEY=your_api_key_here" > .env.local
+# Then edit .env.local with your actual API key
 
 # 4. Start development server
 npm run dev
@@ -637,20 +637,20 @@ The platform uses sector-specific weights to calculate aggregate risk scores:
 
 | Sector | Tech | IP | Market | Regulatory | Financial |
 |--------|------|----|---------|-----------:|---------:|
-| Medical Devices | 0.25 | 0.20 | 0.15 | 0.30 | 0.10 |
-| Biotech/Pharma | 0.20 | 0.25 | 0.15 | 0.30 | 0.10 |
-| Enterprise Software | 0.30 | 0.15 | 0.25 | 0.10 | 0.20 |
-| AI/ML | 0.35 | 0.15 | 0.25 | 0.10 | 0.15 |
-| Consumer Hardware | 0.25 | 0.20 | 0.25 | 0.15 | 0.15 |
-| Clean Energy | 0.25 | 0.20 | 0.20 | 0.20 | 0.15 |
-| Advanced Materials | 0.30 | 0.25 | 0.15 | 0.15 | 0.15 |
-| Default | 0.25 | 0.20 | 0.20 | 0.20 | 0.15 |
+| Medical Devices | 0.20 | 0.30 | 0.15 | 0.25 | 0.10 |
+| Biotech/Pharma | 0.30 | 0.30 | 0.10 | 0.20 | 0.10 |
+| Enterprise Software | 0.15 | 0.10 | 0.40 | 0.05 | 0.30 |
+| AI/ML | 0.25 | 0.15 | 0.30 | 0.10 | 0.20 |
+| Consumer Hardware | 0.20 | 0.15 | 0.35 | 0.10 | 0.20 |
+| Clean Energy | 0.30 | 0.20 | 0.15 | 0.15 | 0.20 |
+| Advanced Materials | 0.35 | 0.25 | 0.15 | 0.10 | 0.15 |
+| Default | 0.20 | 0.20 | 0.20 | 0.20 | 0.20 |
 
 **Risk Levels:**
-- **Low** (0-25): Green indicator
-- **Moderate** (26-50): Yellow indicator
-- **Elevated** (51-75): Orange indicator
-- **High** (76-100): Red indicator
+- **Low** (< 25): Green indicator
+- **Moderate** (25-39): Yellow indicator
+- **Elevated** (40-59): Orange indicator
+- **High** (>= 60): Red indicator
 
 ---
 
@@ -660,7 +660,7 @@ The platform uses sector-specific weights to calculate aggregate risk scores:
 
 | Method | Model | Purpose |
 |--------|-------|---------|
-| `generateAssessment()` | gemini-3-flash-preview | Orchestrate 6 parallel agents for full report |
+| `generateAssessment()` | gemini-3-pro-preview | Orchestrate 6 parallel agents for full report |
 | `chatWithAnalyst()` | gemini-3-flash-preview | Context-aware chat with search tool |
 | `generateProductConcept()` | gemini-3-pro-image-preview | Generate product visualization |
 
@@ -774,25 +774,18 @@ interface IpDeepDive {
 
 ## Configuration
 
-### Vite Configuration (`vite.config.ts`)
+### Vite Configuration
 
-```typescript
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 3000,
-    host: '0.0.0.0'    // External access
-  },
-  define: {
-    'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY)
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './')
-    }
-  }
-});
-```
+The build configuration is defined in `vite.config.ts`. Key settings include:
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `server.port` | 3000 | Development server port |
+| `server.host` | 0.0.0.0 | Allow external connections |
+| `define` | `process.env.*` | Environment variable injection |
+| `resolve.alias` | `@` -> root | Path alias for imports |
+
+See `vite.config.ts` for the complete configuration including environment variable loading with `loadEnv`.
 
 ### TypeScript Configuration
 
