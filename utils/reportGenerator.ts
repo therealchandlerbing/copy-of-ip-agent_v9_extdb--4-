@@ -5,9 +5,50 @@ import { REPORT_TEMPLATE } from './reportTemplate';
 export const generateHtmlReport = (report: AssessmentReport): string => {
   let html = REPORT_TEMPLATE;
 
-  // Helper to replace text safely
-  const replace = (key: string, value: string | number | undefined) => {
-    const valStr = value !== undefined ? String(value) : '';
+  // Helper to replace text safely with MarkDown processing
+  const replace = (key: string, value: string | number | undefined, isMarkdown: boolean = false) => {
+    let valStr = value !== undefined ? String(value) : '';
+
+    if (isMarkdown) {
+      // 1. Bold: **text** -> <strong>text</strong>
+      valStr = valStr.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      // 2. Lists: * item -> <li>item</li>
+      // Check if there are any list items
+      if (valStr.includes('\n* ') || valStr.includes('\n- ') || valStr.startsWith('* ') || valStr.startsWith('- ')) {
+        const lines = valStr.split('\n');
+        let inList = false;
+        let newList = [];
+
+        for (let line of lines) {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+            if (!inList) {
+              newList.push('<ul class="markdown-list">');
+              inList = true;
+            }
+            newList.push(`<li>${trimmed.substring(2)}</li>`);
+          } else {
+            if (inList) {
+              newList.push('</ul>');
+              inList = false;
+            }
+            // Wrap paragraph text if it's not empty/header
+            if (trimmed.length > 0 && !trimmed.startsWith('#')) {
+              newList.push(`<p>${line}</p>`);
+            } else {
+              newList.push(line);
+            }
+          }
+        }
+        if (inList) newList.push('</ul>');
+        valStr = newList.join('\n');
+      } else {
+        // Just paragraphs
+        valStr = valStr.split('\n\n').map(p => `<p>${p}</p>`).join('');
+      }
+    }
+
     const regex = new RegExp(`{{${key}}}`, 'g');
     html = html.replace(regex, valStr);
   };
@@ -25,32 +66,32 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   let riskColor = '#10b981'; // green
   if (riskScore >= 60) riskColor = '#ef4444'; // red
   else if (riskScore >= 40) riskColor = '#f97316'; // orange/amber
-  
+
   replace('RISK_COLOR', riskColor);
   replace('RISK_SCORE', riskScore);
   replace('RISK_LEVEL_TEXT', `${report.executiveSummary.riskProfile.riskLevel.toUpperCase()} RISK PROFILE`);
   replace('RISK_COUNTS_TEXT', `${report.executiveSummary.riskProfile.tier1Count} Critical Issues | ${report.executiveSummary.riskProfile.tier2Count} Major Issues`);
-  replace('RISK_SUMMARY_TEXT', report.executiveSummary.riskProfile.summaryParagraph);
+  replace('RISK_SUMMARY_TEXT', report.executiveSummary.riskProfile.summaryParagraph, true);
 
-  // Formatting concerns
-  const concernsHtml = report.executiveSummary.criticalConcerns.map(c => `
-    <div style="margin-bottom: 20px;">
-        <h4 style="margin-bottom: 2px;">${c.title}</h4>
-        <div style="font-size: 8.5pt; color: #475569; margin-bottom: 2px;"><strong style="color: #64748b;">What:</strong> ${c.what}</div>
-        <div style="font-size: 8.5pt; color: #475569; margin-bottom: 2px;"><strong style="color: #64748b;">Why it matters:</strong> ${c.whyItMatters}</div>
-        <div style="font-size: 8.5pt; color: #0f172a; margin-bottom: 2px;"><strong style="color: #64748b;">Resolution:</strong> ${c.resolution}</div>
-    </div>
-  `).join('');
+  // Formatting concerns - Numbered List for Critical Red Flags
+  const concernsHtml = `<ol style="margin-left:20px; padding-left:0;">` + report.executiveSummary.criticalConcerns.map(c => `
+    <li style="margin-bottom: 15px; padding-left: 10px;">
+        <h4 style="margin-bottom: 2px; margin-top:0;">${c.title}</h4>
+        <div style="font-size: 9pt; color: #475569; margin-bottom: 2px;"><strong style="color: #64748b;">What:</strong> ${c.what}</div>
+        <div style="font-size: 9pt; color: #475569; margin-bottom: 2px;"><strong style="color: #64748b;">Why it matters:</strong> ${c.whyItMatters}</div>
+        <div style="font-size: 9pt; color: #0f172a; margin-bottom: 2px;"><strong style="color: #64748b;">Resolution:</strong> ${c.resolution}</div>
+    </li>
+  `).join('') + `</ol>`;
   replace('CRITICAL_CONCERNS_BLOCK', concernsHtml);
 
-  // Formatting Strengths
-  const strengthsHtml = report.executiveSummary.keyStrengths.map(s => `
-    <div style="margin-bottom: 20px;">
-        <h4 style="margin-bottom: 2px;">${s.title}</h4>
+  // Formatting Strengths - Bulleted List
+  const strengthsHtml = `<ul style="margin-left:20px; padding-left:0;">` + report.executiveSummary.keyStrengths.map(s => `
+    <li style="margin-bottom: 15px; padding-left: 10px;">
+        <h4 style="margin-bottom: 2px; margin-top:0;">${s.title}</h4>
         <p style="margin-bottom: 2px; font-size:9pt;">${s.description}</p>
-        <p style="font-size: 8pt; font-weight: 700; color: #059669; margin: 0;">Evidence: ${s.evidence}</p>
-    </div>
-  `).join('');
+        <p style="font-size: 8.5pt; font-weight: 700; color: #059669; margin: 0;">Evidence: ${s.evidence}</p>
+    </li>
+  `).join('') + `</ul>`;
   replace('KEY_STRENGTHS_BLOCK', strengthsHtml);
 
   // Commercialization Path
@@ -70,15 +111,15 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   replace('DATA_CONFIDENCE_ROWS', confHtml);
 
   // --- 3. TECHNOLOGY FORENSICS ---
-  replace('TECH_OVERVIEW', report.technologyForensics.overview.paragraph);
-  
+  replace('TECH_OVERVIEW', report.technologyForensics.overview.paragraph, true);
+
   const featuresHtml = report.technologyForensics.overview.coreFeatures.map(f => `
     <li style="margin-bottom:4px;">
         <span style="font-weight:700; color:var(--color-navy);">${f.name}:</span> ${f.description}
     </li>
   `).join('');
   replace('CORE_FEATURES', featuresHtml);
-  replace('MECHANISM_EXPLANATION', report.technologyForensics.coreTechnology.explanation);
+  replace('MECHANISM_EXPLANATION', report.technologyForensics.coreTechnology.explanation, true);
 
   const specsHtml = report.technologyForensics.coreTechnology.specifications.map(s => `
     <tr>
@@ -146,7 +187,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
 
   // --- 4. IP DEEP DIVE ---
   replace('IP_METHODOLOGY', report.ipDeepDive.searchMethodology.intro);
-  
+
   const searchHtml = report.ipDeepDive.searchMethodology.components.map(c => `
     <tr>
         <td>${c.component}</td>
@@ -157,8 +198,8 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   `).join('');
   replace('IP_SEARCH_ROWS', searchHtml);
 
-  replace('IP_CLASSIFICATION_NARRATIVE', report.ipDeepDive.classificationAnalysis);
-  
+  replace('IP_CLASSIFICATION_NARRATIVE', report.ipDeepDive.classificationAnalysis, true);
+
   const classHtml = report.ipDeepDive.classificationCodes.map(c => `
     <tr>
         <td style="font-weight:700; color:#1e40af;">${c.code}</td>
@@ -167,17 +208,17 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
     </tr>
   `).join('');
   replace('IP_CLASS_ROWS', classHtml);
-  replace('WHITESPACE_TEXT', report.ipDeepDive.whitespace.description);
+  replace('WHITESPACE_TEXT', report.ipDeepDive.whitespace.description, true);
 
   const partnerships = report.ipDeepDive.whitespace.strategicPartnerships;
   if (partnerships) {
-      replace('WHITESPACE_TARGETS', partnerships.licensingTargets);
-      replace('WHITESPACE_MODEL', partnerships.partnershipModel);
-      replace('WHITESPACE_RATIONALE', partnerships.rationale);
+    replace('WHITESPACE_TARGETS', partnerships.licensingTargets);
+    replace('WHITESPACE_MODEL', partnerships.partnershipModel);
+    replace('WHITESPACE_RATIONALE', partnerships.rationale);
   } else {
-      replace('WHITESPACE_TARGETS', 'N/A');
-      replace('WHITESPACE_MODEL', 'N/A');
-      replace('WHITESPACE_RATIONALE', 'No strategy defined.');
+    replace('WHITESPACE_TARGETS', 'N/A');
+    replace('WHITESPACE_MODEL', 'N/A');
+    replace('WHITESPACE_RATIONALE', 'No strategy defined.');
   }
 
   // Render Blocking Patents - Explicitly split into 2 per page for clarity
@@ -231,21 +272,21 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   replace('FILING_PHASES', phasesHtml);
 
   // --- 5. MARKET DYNAMICS ---
-  
+
   // Market Sizing
-  const sizing = report.marketDynamics.marketSizeAnalysis || { 
-    totalAddressableMarket: "N/A", 
-    serviceableAvailableMarket: "N/A", 
-    cagr: "N/A", 
-    forecastPeriod: "", 
-    keyDrivers: [], 
-    marketTrends: [] 
+  const sizing = report.marketDynamics.marketSizeAnalysis || {
+    totalAddressableMarket: "N/A",
+    serviceableAvailableMarket: "N/A",
+    cagr: "N/A",
+    forecastPeriod: "",
+    keyDrivers: [],
+    marketTrends: []
   };
   replace('TAM', sizing.totalAddressableMarket);
   replace('SAM', sizing.serviceableAvailableMarket);
   replace('CAGR', sizing.cagr);
   replace('FORECAST', sizing.forecastPeriod);
-  
+
   const driversHtml = sizing.keyDrivers.map(d => `<li style="margin-bottom:4px;">${d}</li>`).join('');
   replace('DRIVERS_LIST', driversHtml || '<li>No drivers identified.</li>');
 
@@ -254,47 +295,47 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
 
   // Graveyard
   const graveyard = report.marketDynamics?.graveyard || { intro: 'N/A', failedProducts: [] };
-  replace('GRAVEYARD_INTRO', graveyard.intro);
-  
+  replace('GRAVEYARD_INTRO', graveyard.intro, true);
+
   const graveyardHtml = (graveyard.failedProducts || []).map(f => `
-    <div style="margin-bottom: 18px; padding-left: 12px; border-left: 3px solid var(--color-navy);">
-        <div style="font-weight:700; color:var(--color-accent); margin-bottom:4px; font-size:10pt;">${f.name} (${f.company})</div>
-        <div style="font-size:9pt;">
-            <div style="margin-bottom:2px;"><strong>Timeline:</strong> ${f.timeline}</div>
-            <div style="margin-bottom:2px;"><strong>Failure Mode:</strong> ${f.failureMode}</div>
-            <div style="margin-top:6px; font-style:italic; color:#475569;"><strong>Lesson:</strong> ${f.lesson}</div>
+    <div class="graveyard-item">
+        <div style="font-weight:700; color:var(--color-accent); margin-bottom:4mm; font-size:10pt;">${f.name} <span style="font-weight:400; color:#64748b;">(${f.company})</span></div>
+        <div style="font-size:9pt; line-height:1.5;">
+            <div style="margin-bottom:2mm;"><strong style="color:var(--color-primary);">Timeline:</strong> ${f.timeline}</div>
+            <div style="margin-bottom:2mm;"><strong style="color:var(--color-risk-high);">Failure Mode:</strong> ${f.failureMode}</div>
+            <div style="margin-top:6px; font-style:italic; color:#475569; background:rgba(255,255,255,0.5); padding:8px; border-radius:4px;"><strong>Lesson:</strong> ${f.lesson}</div>
         </div>
     </div>
   `).join('');
   replace('GRAVEYARD_BLOCK', graveyardHtml);
 
-  // Competitors - Render 2 per page max
+  // Competitors - Render 4 per page max
   const renderCompetitor = (c: any) => `
-    <div style="margin-bottom: 25px; border-top: 4px solid ${c.status === 'Active' ? '#2563eb' : '#94a3b8'}; background: white; padding: 18px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-            <div style="font-weight:700; font-size:11pt; color: var(--color-navy);">${c.name}</div>
-            <span class="badge ${c.status === 'Active' ? 'badge-blue' : 'badge-slate'}">${c.status.toUpperCase()}</span>
+    <div style="margin-bottom: 15px; border-top: 4px solid ${c.status === 'Active' ? '#2563eb' : '#94a3b8'}; background: white; padding: 12px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <div style="font-weight:700; font-size:10pt; color: var(--color-navy);">${c.name}</div>
+            <span class="badge ${c.status === 'Active' ? 'badge-blue' : 'badge-slate'}" style="font-size:7pt;">${c.status.toUpperCase()}</span>
         </div>
-        <div style="display:flex; gap:30px; margin-bottom:12px;">
+        <div style="display:flex; gap:20px; margin-bottom:8px;">
              <div>
-                <div style="font-size:6.5pt; color:#94a3b8; font-weight:700; text-transform:uppercase;">SEGMENT</div>
-                <div style="font-size:8.5pt; font-weight: 600;">${c.segment}</div>
+                <div style="font-size:6pt; color:#94a3b8; font-weight:700; text-transform:uppercase;">SEGMENT</div>
+                <div style="font-size:8pt; font-weight: 600;">${c.segment}</div>
             </div>
              <div>
-                <div style="font-size:6.5pt; color:#94a3b8; font-weight:700; text-transform:uppercase;">GEOGRAPHY</div>
-                <div style="font-size:8.5pt; font-weight: 600;">${c.geography}</div>
+                <div style="font-size:6pt; color:#94a3b8; font-weight:700; text-transform:uppercase;">GEOGRAPHY</div>
+                <div style="font-size:8pt; font-weight: 600;">${c.geography}</div>
             </div>
         </div>
-        <p style="font-size:9pt; margin-bottom:8px;"><strong>Value Proposition:</strong> ${c.valueProposition}</p>
-        <div style="background:#fef2f2; color:#b91c1c; padding:10px; font-size:8.5pt;">
+        <p style="font-size:8.5pt; margin-bottom:6px;"><strong>Value Proposition:</strong> ${c.valueProposition}</p>
+        <div style="background:#fef2f2; color:#b91c1c; padding:8px; font-size:8pt;">
             <strong>Vulnerability:</strong> ${c.vulnerability}
         </div>
     </div>
   `;
 
   const competitors = report.marketDynamics.competitiveLandscape;
-  replace('COMPETITOR_DETAILED_PAGE_1', competitors.slice(0, 2).map(renderCompetitor).join(''));
-  replace('COMPETITOR_DETAILED_PAGE_2', competitors.slice(2).map(renderCompetitor).join('') || '<div style="color:#64748b; font-style:italic; text-align: center; margin-top: 40px; font-size:9pt; border: 1px dashed #cbd5e1; padding: 20px;">No additional competitors detailed.</div>');
+  replace('COMPETITOR_DETAILED_PAGE_1', competitors.slice(0, 4).map(renderCompetitor).join(''));
+  replace('COMPETITOR_DETAILED_PAGE_2', competitors.slice(4).map(renderCompetitor).join('') || '<div style="color:#64748b; font-style:italic; text-align: center; margin-top: 40px; font-size:9pt; border: 1px dashed #cbd5e1; padding: 20px;">No additional competitors detailed.</div>');
 
   const compRowHtml = report.marketDynamics.competitiveLandscape.map(c => `
     <tr>
@@ -324,7 +365,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   replace('DEVICE_CLASS', report.regulatoryPathway.classification.regulatoryClassification);
   replace('REG_PATHWAY', report.regulatoryPathway.classification.pathway);
   replace('REG_TIMELINE', report.regulatoryPathway.classification.timelineEstimate);
-  replace('REG_NARRATIVE', report.regulatoryPathway.classification.intro);
+  replace('REG_NARRATIVE', report.regulatoryPathway.classification.intro, true);
 
   const precedentHtml = report.regulatoryPathway.comparableSystems.map(p => `
     <tr>
@@ -407,8 +448,8 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   // --- 9. DIRECTOR'S INSIGHTS ---
   const synthesis = report.strategicRecommendations.ttoSynthesis;
   if (synthesis) {
-    replace('INSIGHTS_NARRATIVE', synthesis.insightNarrative);
-    
+    replace('INSIGHTS_NARRATIVE', synthesis.insightNarrative, true);
+
     // Updated recommendation style for light background
     const recsHtml = synthesis.keyRecommendations.map(r => `
       <div class="card" style="border-top: 4px solid ${r.priority === 'Critical' ? '#ef4444' : r.priority === 'High' ? '#f59e0b' : '#3b82f6'}; background: #ffffff; color:#1e293b;">
@@ -425,10 +466,11 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
 
   // --- 10. APPENDIX IMAGE ---
   if (report.productConcept) {
-      const appendixHtml = `
+    const appendixHtml = `
       <div class="page page-section">
-          <div class="section-num">09</div>
+          <div class="section-watermark">09</div>
           <div class="section-content">
+              <div class="section-num">09</div>
               <div class="section-name">Appendix</div>
               <div class="section-desc">Concept Visualization</div>
           </div>
@@ -447,9 +489,9 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
           <div class="footer"><span>Confidential Assessment</span><span>Page 40</span></div>
       </div>
       `;
-      replace('PRODUCT_CONCEPT_IMAGE', appendixHtml);
+    replace('PRODUCT_CONCEPT_IMAGE', appendixHtml);
   } else {
-      replace('PRODUCT_CONCEPT_IMAGE', '');
+    replace('PRODUCT_CONCEPT_IMAGE', '');
   }
 
   return html;

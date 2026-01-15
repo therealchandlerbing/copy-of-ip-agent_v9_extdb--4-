@@ -6,14 +6,14 @@ const API_KEY = process.env.API_KEY || '';
 
 // --- SECTOR WEIGHTING RUBRIC (DETERMINISTIC) ---
 const SECTOR_WEIGHTS: Record<string, { tech: number, ip: number, market: number, regulatory: number, financial: number }> = {
-  "medical_devices":    { tech: 0.20, ip: 0.30, market: 0.15, regulatory: 0.25, financial: 0.10 },
-  "biotech_pharma":     { tech: 0.30, ip: 0.30, market: 0.10, regulatory: 0.20, financial: 0.10 },
-  "enterprise_software":{ tech: 0.15, ip: 0.10, market: 0.40, regulatory: 0.05, financial: 0.30 },
-  "ai_ml":              { tech: 0.25, ip: 0.15, market: 0.30, regulatory: 0.10, financial: 0.20 },
-  "consumer_hardware":  { tech: 0.20, ip: 0.15, market: 0.35, regulatory: 0.10, financial: 0.20 },
-  "clean_energy":       { tech: 0.30, ip: 0.20, market: 0.15, regulatory: 0.15, financial: 0.20 },
+  "medical_devices": { tech: 0.20, ip: 0.30, market: 0.15, regulatory: 0.25, financial: 0.10 },
+  "biotech_pharma": { tech: 0.30, ip: 0.30, market: 0.10, regulatory: 0.20, financial: 0.10 },
+  "enterprise_software": { tech: 0.15, ip: 0.10, market: 0.40, regulatory: 0.05, financial: 0.30 },
+  "ai_ml": { tech: 0.25, ip: 0.15, market: 0.30, regulatory: 0.10, financial: 0.20 },
+  "consumer_hardware": { tech: 0.20, ip: 0.15, market: 0.35, regulatory: 0.10, financial: 0.20 },
+  "clean_energy": { tech: 0.30, ip: 0.20, market: 0.15, regulatory: 0.15, financial: 0.20 },
   "advanced_materials": { tech: 0.35, ip: 0.25, market: 0.15, regulatory: 0.10, financial: 0.15 },
-  "default":            { tech: 0.20, ip: 0.20, market: 0.20, regulatory: 0.20, financial: 0.20 }
+  "default": { tech: 0.20, ip: 0.20, market: 0.20, regulatory: 0.20, financial: 0.20 }
 };
 
 // --- DEFAULT FALLBACKS TO PREVENT UI CRASHES ---
@@ -22,9 +22,9 @@ const DEFAULT_IP_DEEP_DIVE = {
   searchMethodology: { intro: "Search data unavailable due to processing error.", components: [], gaps: "N/A" },
   classificationAnalysis: "Classification analysis unavailable.",
   classificationCodes: [],
-  whitespace: { 
-    intro: "N/A", 
-    description: "Analysis unavailable.", 
+  whitespace: {
+    intro: "N/A",
+    description: "Analysis unavailable.",
     evidence: "N/A",
     strategicPartnerships: { licensingTargets: "N/A", partnershipModel: "N/A", rationale: "N/A" }
   },
@@ -79,13 +79,13 @@ const DEFAULT_FINANCIAL = {
 
 const DEFAULT_SYNTHESIS = {
   executiveSummary: {
-    riskProfile: { 
-      aggregateScore: 0, 
-      riskLevel: "moderate" as "low" | "moderate" | "elevated" | "high", 
-      tier1Count: 0, 
-      tier2Count: 0, 
-      tier3Count: 0, 
-      summaryParagraph: "Executive summary unavailable due to processing error." 
+    riskProfile: {
+      aggregateScore: 0,
+      riskLevel: "moderate" as "low" | "moderate" | "elevated" | "high",
+      tier1Count: 0,
+      tier2Count: 0,
+      tier3Count: 0,
+      summaryParagraph: "Executive summary unavailable due to processing error."
     },
     criticalConcerns: [],
     keyStrengths: [],
@@ -100,8 +100,8 @@ const DEFAULT_SYNTHESIS = {
     monitoringMetrics: [],
     riskIndicators: [],
     ttoSynthesis: {
-        insightNarrative: "Director's synthesis unavailable due to processing error.",
-        keyRecommendations: []
+      insightNarrative: "Director's synthesis unavailable due to processing error.",
+      keyRecommendations: []
     }
   }
 };
@@ -384,7 +384,7 @@ OUTPUT JSON FORMAT:
     "monitoringMetrics": [{ "category": "string", "metric": "string", "significance": "string" }],
     "riskIndicators": ["string"],
     "ttoSynthesis": {
-       "insightNarrative": "string (The 'Director's Memo' - blunt, strategic advice, 400+ words. Use **bold**.)",
+       "insightNarrative": "string (The 'Director's Memo' - blunt, strategic advice, MAXIMUM 200 WORDS. Concise and punchy to fit on 1 page.)",
        "keyRecommendations": [{ "title": "string", "description": "string", "priority": "Critical|High|Medium" }]
     }
   }
@@ -420,32 +420,32 @@ export class GeminiService {
   // Helper to clean JSON string with robust escape handling
   private cleanJsonString(text: string): string {
     if (!text) return "{}";
-    
+
     // 1. Remove markdown wrapping
     let clean = text.replace(/```json\s*/g, '').replace(/```\s*/g, '');
-    
+
     // 2. Extract JSON object/array
     const firstOpen = clean.indexOf('{');
     const firstArray = clean.indexOf('[');
-    
+
     let startIndex = -1;
     if (firstOpen !== -1 && (firstArray === -1 || firstOpen < firstArray)) startIndex = firstOpen;
     else if (firstArray !== -1) startIndex = firstArray;
 
     if (startIndex === -1) return "{}";
-    
+
     const lastCloseBrace = clean.lastIndexOf('}');
     const lastCloseArray = clean.lastIndexOf(']');
     let endIndex = -1;
-    
+
     if (lastCloseBrace !== -1 && (lastCloseArray === -1 || lastCloseBrace > lastCloseArray)) endIndex = lastCloseBrace;
     else if (lastCloseArray !== -1) endIndex = lastCloseArray;
 
     if (endIndex !== -1) clean = clean.substring(startIndex, endIndex + 1);
     else return "{}";
-    
+
     clean = clean.trim();
-    
+
     // 3. Remove control characters (0x00-0x1F) except standard whitespace to prevent parse errors
     clean = clean.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
 
@@ -457,30 +457,30 @@ export class GeminiService {
     // while preserving valid escapes: " \ / b f n r t u
     // Regex: Match \ NOT followed by (valid escape chars or unicode sequence)
     clean = clean.replace(/\\(?!(["\\/bfnrt]|u[0-9a-fA-F]{4}))/g, '\\\\');
-    
+
     return clean;
   }
 
   private isRetryableError(e: any): boolean {
     try {
-        const str = JSON.stringify(e);
-        return (
-            str.includes('429') || 
-            str.includes('RESOURCE_EXHAUSTED') || 
-            str.includes('Quota exceeded') ||
-            str.includes('503') ||
-            str.includes('500')
-        );
+      const str = JSON.stringify(e);
+      return (
+        str.includes('429') ||
+        str.includes('RESOURCE_EXHAUSTED') ||
+        str.includes('Quota exceeded') ||
+        str.includes('503') ||
+        str.includes('500')
+      );
     } catch {
-        return false;
+      return false;
     }
   }
 
   private async executeDirective(
-    promptName: string, 
-    promptText: string, 
-    context: any, 
-    defaultValue: any, 
+    promptName: string,
+    promptText: string,
+    context: any,
+    defaultValue: any,
     useSearch: boolean = false,
     thinkingBudget: number = 0
   ): Promise<any> {
@@ -489,56 +489,56 @@ export class GeminiService {
     const maxRetries = 3;
 
     for (let i = 0; i <= maxRetries; i++) {
-        let responseText = "{}";
-        try {
-            const config: any = {
-                tools: useSearch ? [{ googleSearch: {} }] : [],
-                responseMimeType: "application/json",
-                systemInstruction: "You are the Arcus Innovation Compass, a forensic technology and IP auditing engine. You provide 'Investor-Grade' due diligence. Use Markdown formatting (bolding, lists) within JSON string values to enhance readability. Be objective, rigorous, and data-driven. IMPORTANT: Return valid JSON only. Escape all internal double quotes and backslashes properly. Do NOT use LaTeX or unsupported escape sequences.",
-            };
-            
-            if (thinkingBudget > 0) {
-                config.thinkingConfig = { thinkingBudget };
-            }
+      let responseText = "{}";
+      try {
+        const config: any = {
+          tools: useSearch ? [{ googleSearch: {} }] : [],
+          responseMimeType: "application/json",
+          systemInstruction: "You are the Arcus Innovation Compass, a forensic technology and IP auditing engine. You provide 'Investor-Grade' due diligence. Use Markdown formatting (bolding, lists) within JSON string values to enhance readability. Be objective, rigorous, and data-driven. IMPORTANT: Return valid JSON only. Escape all internal double quotes and backslashes properly. Do NOT use LaTeX or unsupported escape sequences.",
+        };
 
-            const response = await this.ai.models.generateContent({
-                model: 'gemini-3-pro-preview',
-                contents: `CONTEXT:\n${contextStr}\n\nTASK:\n${promptText}\n\nIMPORTANT: Return valid JSON only. Do not use Markdown block syntax if possible. Escape all special characters in strings (especially backslashes). Ensure deep, investor-grade analysis with high specificity and real data where possible.`,
-                config: config
-            });
-            
-            responseText = response.text || "{}";
-            const text = this.cleanJsonString(responseText);
-            return JSON.parse(text);
-        } catch (e: any) {
-            const isRetryable = this.isRetryableError(e);
-            const isLastAttempt = i === maxRetries;
-
-            if (isRetryable && !isLastAttempt) {
-                console.warn(`[Arcus Engine] Rate limit/Error hit for ${promptName}. Retrying in ${delay}ms...`);
-                await new Promise(resolve => setTimeout(resolve, delay));
-                delay *= 2; 
-                continue;
-            }
-
-            // Fallback: Aggressive backslash sanitization if syntax error persists
-            if (e instanceof SyntaxError) {
-                 console.warn(`[Arcus Engine] JSON Syntax Error in ${promptName}. Attempting aggressive repair.`);
-                 try {
-                    // Aggressive repair: Replace problematic backslashes that aren't common escapes with forward slashes
-                    // to salvage the structure.
-                    // We preserve \", \/, \b, \f, \n, \r, \t, \uXXXX
-                    const aggressive = this.cleanJsonString(responseText)
-                        .replace(/\\(?!(["\\/bfnrt]|u[0-9a-fA-F]{4}))/g, "/"); 
-                    return JSON.parse(aggressive);
-                 } catch (e2) {
-                     console.error(`[Arcus Engine] Aggressive repair failed for ${promptName}.`, e2);
-                 }
-            }
-
-            console.error(`Directive ${promptName} failed:`, e);
-            return defaultValue; 
+        if (thinkingBudget > 0) {
+          config.thinkingConfig = { thinkingBudget };
         }
+
+        const response = await this.ai.models.generateContent({
+          model: 'gemini-3-pro-preview',
+          contents: `CONTEXT:\n${contextStr}\n\nTASK:\n${promptText}\n\nIMPORTANT: Return valid JSON only. Do not use Markdown block syntax if possible. Escape all special characters in strings (especially backslashes). Ensure deep, investor-grade analysis with high specificity and real data where possible.`,
+          config: config
+        });
+
+        responseText = response.text || "{}";
+        const text = this.cleanJsonString(responseText);
+        return JSON.parse(text);
+      } catch (e: any) {
+        const isRetryable = this.isRetryableError(e);
+        const isLastAttempt = i === maxRetries;
+
+        if (isRetryable && !isLastAttempt) {
+          console.warn(`[Arcus Engine] Rate limit/Error hit for ${promptName}. Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+          continue;
+        }
+
+        // Fallback: Aggressive backslash sanitization if syntax error persists
+        if (e instanceof SyntaxError) {
+          console.warn(`[Arcus Engine] JSON Syntax Error in ${promptName}. Attempting aggressive repair.`);
+          try {
+            // Aggressive repair: Replace problematic backslashes that aren't common escapes with forward slashes
+            // to salvage the structure.
+            // We preserve \", \/, \b, \f, \n, \r, \t, \uXXXX
+            const aggressive = this.cleanJsonString(responseText)
+              .replace(/\\(?!(["\\/bfnrt]|u[0-9a-fA-F]{4}))/g, "/");
+            return JSON.parse(aggressive);
+          } catch (e2) {
+            console.error(`[Arcus Engine] Aggressive repair failed for ${promptName}.`, e2);
+          }
+        }
+
+        console.error(`Directive ${promptName} failed:`, e);
+        return defaultValue;
+      }
     }
     return defaultValue;
   }
@@ -548,45 +548,45 @@ export class GeminiService {
     const maxRetries = 3;
 
     for (let i = 0; i <= maxRetries; i++) {
-        try {
-            const parts: any[] = files.map(file => ({
-                inlineData: { mimeType: file.mimeType, data: file.data }
-            }));
-            parts.push({ text: EXTRACTION_PROMPT });
+      try {
+        const parts: any[] = files.map(file => ({
+          inlineData: { mimeType: file.mimeType, data: file.data }
+        }));
+        parts.push({ text: EXTRACTION_PROMPT });
 
-            const response = await this.ai.models.generateContent({
-                model: 'gemini-3-pro-preview',
-                contents: { parts: parts },
-                config: { responseMimeType: "application/json" }
-            });
-            const text = this.cleanJsonString(response.text || "{}");
-            return JSON.parse(text);
-        } catch (e: any) {
-            const isRetryable = this.isRetryableError(e);
-            const isLastAttempt = i === maxRetries;
+        const response = await this.ai.models.generateContent({
+          model: 'gemini-3-pro-preview',
+          contents: { parts: parts },
+          config: { responseMimeType: "application/json" }
+        });
+        const text = this.cleanJsonString(response.text || "{}");
+        return JSON.parse(text);
+      } catch (e: any) {
+        const isRetryable = this.isRetryableError(e);
+        const isLastAttempt = i === maxRetries;
 
-            if (isRetryable && !isLastAttempt) {
-                console.warn(`[Arcus Engine] Rate limit hit for Context Extraction. Retrying in ${delay}ms...`);
-                await new Promise(resolve => setTimeout(resolve, delay));
-                delay *= 2; 
-                continue;
-            }
-
-            console.error("Context extraction failed:", e);
-            return {
-               "q1_innovation_name": "Document Analysis Failed",
-               "q2_problem_statement": "Analysis incomplete.",
-               "q4_sector": "Unknown",
-               "q5_development_stage": "Unknown",
-               "error": true 
-            };
+        if (isRetryable && !isLastAttempt) {
+          console.warn(`[Arcus Engine] Rate limit hit for Context Extraction. Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+          continue;
         }
+
+        console.error("Context extraction failed:", e);
+        return {
+          "q1_innovation_name": "Document Analysis Failed",
+          "q2_problem_statement": "Analysis incomplete.",
+          "q4_sector": "Unknown",
+          "q5_development_stage": "Unknown",
+          "error": true
+        };
+      }
     }
     return {};
   }
 
   async generateAssessmentFromQuestionnaire(responses: any): Promise<AssessmentReport> {
-     return this.runAssessmentPipeline(responses, InputType.QUESTIONNAIRE);
+    return this.runAssessmentPipeline(responses, InputType.QUESTIONNAIRE);
   }
 
   async generateAssessmentFromDocuments(files: { mimeType: string, data: string }[]): Promise<AssessmentReport> {
@@ -599,83 +599,85 @@ export class GeminiService {
   }
 
   private calculateWeightedRiskScore(
-    sector: string, 
+    sector: string,
     rawScores: { technical: number, ip: number, market: number, regulatory: number, financial: number }
   ) {
     const weights = SECTOR_WEIGHTS[sector] || SECTOR_WEIGHTS["default"];
-    
-    const weightedViability = 
-        (rawScores.technical * weights.tech) +
-        (rawScores.ip * weights.ip) +
-        (rawScores.market * weights.market) +
-        (rawScores.regulatory * weights.regulatory) +
-        (rawScores.financial * weights.financial);
+
+    const weightedViability =
+      (rawScores.technical * weights.tech) +
+      (rawScores.ip * weights.ip) +
+      (rawScores.market * weights.market) +
+      (rawScores.regulatory * weights.regulatory) +
+      (rawScores.financial * weights.financial);
 
     const riskScore = Math.round(100 - weightedViability);
 
     let riskLevel: 'low' | 'moderate' | 'elevated' | 'high' = 'moderate';
-    
+
     if (riskScore >= 60) riskLevel = 'high';
     else if (riskScore >= 40) riskLevel = 'elevated';
     else if (riskScore >= 25) riskLevel = 'moderate';
     else riskLevel = 'low';
 
-    return { 
-        aggregateScore: riskScore, 
-        riskLevel,
-        breakdown: {
-            technicalScore: rawScores.technical,
-            ipScore: rawScores.ip,
-            marketScore: rawScores.market,
-            regulatoryScore: rawScores.regulatory,
-            financialScore: rawScores.financial,
-            appliedWeights: weights
-        }
+    return {
+      aggregateScore: riskScore,
+      riskLevel,
+      breakdown: {
+        technicalScore: rawScores.technical,
+        ipScore: rawScores.ip,
+        marketScore: rawScores.market,
+        regulatoryScore: rawScores.regulatory,
+        financialScore: rawScores.financial,
+        appliedWeights: weights
+      }
     };
   }
 
   private async runAssessmentPipeline(responses: any, inputType: InputType): Promise<AssessmentReport> {
     const startTime = Date.now();
-    
+
     if (responses.error) {
-         return {
-            id: crypto.randomUUID(),
-            created_at: new Date().toISOString(),
-            innovation_name: "Analysis Failed",
-            sector: "Unknown",
-            stage: "Unknown",
-            location: "Global",
-            version: 1,
-            status: AssessmentStatus.FAILED,
-            input_type: inputType,
-            cover: {
-                technologyName: "Analysis Unavailable",
-                technologySubtitle: "Service Quota Exceeded or Connection Error",
-                clientName: "User",
-                inventorName: "Unknown",
-                reportDate: new Date().toLocaleDateString(),
-                reportId: "ERR-429",
-                contactEmail: "support@arcus.ai"
-            },
-            executiveSummary: { ...DEFAULT_SYNTHESIS.executiveSummary, 
-                riskProfile: { ...DEFAULT_SYNTHESIS.executiveSummary.riskProfile, 
-                    summaryParagraph: "The assessment could not be generated because the AI service is currently unavailable (Rate Limit/Quota Exceeded)."
-                }
-            },
-            technologyForensics: DEFAULT_TECH_FORENSICS,
-            ipDeepDive: DEFAULT_IP_DEEP_DIVE,
-            marketDynamics: DEFAULT_MARKET_DYNAMICS,
-            regulatoryPathway: DEFAULT_REGULATORY,
-            financialRoadmap: DEFAULT_FINANCIAL,
-            strategicRecommendations: DEFAULT_SYNTHESIS.strategicRecommendations,
-            metadata: {
-                gemini_model: "gemini-3-pro-preview",
-                processing_time_seconds: 0,
-                completeness_score: 0
-            }
-        };
+      return {
+        id: crypto.randomUUID(),
+        created_at: new Date().toISOString(),
+        innovation_name: "Analysis Failed",
+        sector: "Unknown",
+        stage: "Unknown",
+        location: "Global",
+        version: 1,
+        status: AssessmentStatus.FAILED,
+        input_type: inputType,
+        cover: {
+          technologyName: "Analysis Unavailable",
+          technologySubtitle: "Service Quota Exceeded or Connection Error",
+          clientName: "User",
+          inventorName: "Unknown",
+          reportDate: new Date().toLocaleDateString(),
+          reportId: "ERR-429",
+          contactEmail: "support@arcus.ai"
+        },
+        executiveSummary: {
+          ...DEFAULT_SYNTHESIS.executiveSummary,
+          riskProfile: {
+            ...DEFAULT_SYNTHESIS.executiveSummary.riskProfile,
+            summaryParagraph: "The assessment could not be generated because the AI service is currently unavailable (Rate Limit/Quota Exceeded)."
+          }
+        },
+        technologyForensics: DEFAULT_TECH_FORENSICS,
+        ipDeepDive: DEFAULT_IP_DEEP_DIVE,
+        marketDynamics: DEFAULT_MARKET_DYNAMICS,
+        regulatoryPathway: DEFAULT_REGULATORY,
+        financialRoadmap: DEFAULT_FINANCIAL,
+        strategicRecommendations: DEFAULT_SYNTHESIS.strategicRecommendations,
+        metadata: {
+          gemini_model: "gemini-3-pro-preview",
+          processing_time_seconds: 0,
+          completeness_score: 0
+        }
+      };
     }
-    
+
     const sector = responses['q4_sector'] || 'default';
     const innovationName = responses['q1_innovation_name'] || "Untitled Innovation";
     const innovationDesc = responses['q3_solution_description'] || "";
@@ -684,20 +686,20 @@ export class GeminiService {
 
     // Increased Thinking Budgets for Deep Analysis
     const [ipDeepDive, marketDynamicsResponse, visualConcept] = await Promise.all([
-         this.executeDirective("IP Analysis", PATENT_ATTORNEY_PROMPT, sectorContext, DEFAULT_IP_DEEP_DIVE, true, 4096),
-         this.executeDirective("Market Dynamics", MARKET_STRATEGIST_PROMPT, sectorContext, DEFAULT_MARKET_DYNAMICS, true, 4096),
-         this.generateProductConcept(`Industrial design concept for ${innovationName}: ${innovationDesc}`, '1K').then(url => ({ imageUrl: url, prompt: innovationDesc })).catch(() => undefined)
+      this.executeDirective("IP Analysis", PATENT_ATTORNEY_PROMPT, sectorContext, DEFAULT_IP_DEEP_DIVE, true, 4096),
+      this.executeDirective("Market Dynamics", MARKET_STRATEGIST_PROMPT, sectorContext, DEFAULT_MARKET_DYNAMICS, true, 4096),
+      this.generateProductConcept(`Industrial design concept for ${innovationName}: ${innovationDesc}`, '1K').then(url => ({ imageUrl: url, prompt: innovationDesc })).catch(() => undefined)
     ]);
-    
+
     const marketDynamics = { ...DEFAULT_MARKET_DYNAMICS, ...marketDynamicsResponse };
     marketDynamics.graveyard = marketDynamics.graveyard || DEFAULT_MARKET_DYNAMICS.graveyard;
     marketDynamics.zombieCompetitors = marketDynamics.zombieCompetitors || DEFAULT_MARKET_DYNAMICS.zombieCompetitors;
     marketDynamics.gapAnalysis = marketDynamics.gapAnalysis || DEFAULT_MARKET_DYNAMICS.gapAnalysis;
-    
+
     const technologyForensics = await this.executeDirective("Technical Validation", TECHNOLOGIST_PROMPT, { ...sectorContext, subsystems: ipDeepDive.searchMethodology?.components }, DEFAULT_TECH_FORENSICS, true, 4096);
-    
+
     const regulatoryPathway = await this.executeDirective("Regulatory", REGULATORY_CONSULTANT_PROMPT, { ...sectorContext, tech: technologyForensics }, DEFAULT_REGULATORY, true);
-    
+
     const financialRoadmap = await this.executeDirective("Financials", COMMERCIAL_LEAD_PROMPT, { ...sectorContext, market: marketDynamics, reg: regulatoryPathway }, DEFAULT_FINANCIAL);
 
     const synthesisContext = {
@@ -725,7 +727,7 @@ export class GeminiService {
       version: 3,
       status: AssessmentStatus.COMPLETED,
       input_type: inputType,
-      
+
       cover: {
         technologyName: innovationName,
         technologySubtitle: "Technology Transfer & Market Assessment",
@@ -739,10 +741,10 @@ export class GeminiService {
       executiveSummary: {
         ...synthesis.executiveSummary || DEFAULT_SYNTHESIS.executiveSummary,
         riskProfile: {
-            ...synthesis.executiveSummary?.riskProfile || DEFAULT_SYNTHESIS.executiveSummary.riskProfile,
-            aggregateScore: calculatedRisk.aggregateScore,
-            riskLevel: calculatedRisk.riskLevel,
-            scoringBreakdown: calculatedRisk.breakdown
+          ...synthesis.executiveSummary?.riskProfile || DEFAULT_SYNTHESIS.executiveSummary.riskProfile,
+          aggregateScore: calculatedRisk.aggregateScore,
+          riskLevel: calculatedRisk.riskLevel,
+          scoringBreakdown: calculatedRisk.breakdown
         }
       },
       technologyForensics: technologyForensics || DEFAULT_TECH_FORENSICS,
@@ -751,7 +753,7 @@ export class GeminiService {
       regulatoryPathway: regulatoryPathway || DEFAULT_REGULATORY,
       financialRoadmap: financialRoadmap || DEFAULT_FINANCIAL,
       strategicRecommendations: synthesis.strategicRecommendations || DEFAULT_SYNTHESIS.strategicRecommendations,
-      
+
       productConcept: visualConcept,
 
       metadata: {
@@ -768,7 +770,7 @@ export class GeminiService {
     // Construct conversation history for the model
     let historyPrompt = "";
     if (history.length > 0) {
-        historyPrompt = "PREVIOUS CONVERSATION:\n" + history.map(h => `${h.role.toUpperCase()}: ${h.content}`).join("\n") + "\n\n";
+      historyPrompt = "PREVIOUS CONVERSATION:\n" + history.map(h => `${h.role.toUpperCase()}: ${h.content}`).join("\n") + "\n\n";
     }
 
     // --- ENHANCED SYSTEM INSTRUCTION FOR "INVESTOR-GRADE" OUTPUT ---
@@ -800,7 +802,7 @@ export class GeminiService {
     `;
 
     if (contextData) {
-        systemContext += `\n\nACTIVE ANALYSIS CONTEXT (READ-ONLY):\n${contextData}`;
+      systemContext += `\n\nACTIVE ANALYSIS CONTEXT (READ-ONLY):\n${contextData}`;
     }
 
     const fullPrompt = `${historyPrompt}USER QUERY: ${message}`;
@@ -817,7 +819,7 @@ export class GeminiService {
   }
 
   async generateProductConcept(prompt: string, size: '1K' | '2K' | '4K' = '1K'): Promise<string> {
-     const response = await this.ai.models.generateContent({
+    const response = await this.ai.models.generateContent({
       model: 'gemini-3-pro-image-preview',
       contents: {
         parts: [{ text: `Professional industrial design product photography of ${prompt}. Cinematic studio lighting, neutral grey background, 8k resolution, highly detailed, photorealistic, product visualization, commercial photography style.` }]
