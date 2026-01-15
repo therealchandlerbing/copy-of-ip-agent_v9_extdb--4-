@@ -29,7 +29,7 @@ export const REPORT_TEMPLATE = `
         }
 
         @page {
-            size: A4; /* Or 8.5in 11in */
+            size: letter; /* Letter Standard */
             margin: 0;
         }
         
@@ -52,8 +52,8 @@ export const REPORT_TEMPLATE = `
 
         /* --- PAGE CONTAINER --- */
         .page {
-            width: 210mm;
-            height: 296mm; /* A4 Standard */
+            width: 8.5in;
+            height: 11in; /* Letter Standard */
             background: white;
             position: relative;
             margin: 0 auto 20px auto;
@@ -69,8 +69,8 @@ export const REPORT_TEMPLATE = `
             .page { 
                 box-shadow: none; 
                 margin: 0; 
-                width: 210mm;
-                height: 296mm;
+                width: 8.5in;
+                height: 11in;
                 page-break-after: always;
                 border: none;
                 overflow: visible !important;
