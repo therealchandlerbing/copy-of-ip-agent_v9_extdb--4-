@@ -1,0 +1,8 @@
+{
+  "name": "Copy of IP Agent_v9_EXTDB",
+  "description": "A high-fidelity platform for generating investor-grade Innovation Compass Reports. Features deep technical forensics, IP landscape analysis, and market reality stress-testing using Gemini's advanced reasoning and search capabilities.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
