@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gemini } from '../services/geminiService';
 import { AssessmentReport, Question } from '../types';
+import { getApiKeySetupInstructions } from '../utils/envCheck';
 
 // --- QUESTIONNAIRE DEFINITIONS (PRD 3.2.1) ---
 const CORE_QUESTIONS: Question[] = [
@@ -253,13 +254,20 @@ const ReportWizard: React.FC<ReportWizardProps> = ({ onComplete, onCancel }) => 
         report = await gemini.generateAssessmentFromQuestionnaire(responses);
       }
       onComplete(report);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setProcessingLogs(prev => [...prev, "❌ Error: Analysis failed. Please check inputs."]);
+      const errorMessage = e?.message || "Analysis failed. Please check inputs.";
+      setProcessingLogs(prev => [...prev, `❌ Error: ${errorMessage}`]);
+
+      // Show detailed error message to user
       setTimeout(() => {
-        alert("Analysis failed. Please try again.");
+        if (errorMessage.includes('API key not found') || errorMessage.includes('VITE_GOOGLE_API_KEY')) {
+          alert(getApiKeySetupInstructions());
+        } else {
+          alert(`Analysis failed: ${errorMessage}\n\nPlease check the console for more details.`);
+        }
         setMode('select');
-      }, 2000);
+      }, 1000);
     }
   };
 

@@ -9,6 +9,7 @@ import FullReportView from './components/FullReportView';
 import Settings from './components/Settings';
 import Visualizer from './components/Visualizer';
 import Footer from './components/Footer';
+import ApiKeyWarningBanner from './components/ApiKeyWarningBanner';
 import { AssessmentReport, AssessmentStatus, InputType } from './types';
 import { generateHtmlReport } from './utils/reportGenerator';
 import { MOCK_REPORTS } from './data/mockReports';
@@ -79,6 +80,7 @@ const App: React.FC = () => {
       )}
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden md:ml-64 transition-all duration-300 relative">
+        <ApiKeyWarningBanner />
         <div className="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center shrink-0">
           <div className="font-bold text-slate-800 flex items-center gap-2">
             <span className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center text-white"><i className="fa-solid fa-compass"></i></span>
