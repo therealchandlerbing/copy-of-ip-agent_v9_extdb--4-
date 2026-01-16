@@ -337,12 +337,12 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   replace('COMPETITOR_DETAILED_PAGE_1', competitors.slice(0, 4).map(renderCompetitor).join(''));
   replace('COMPETITOR_DETAILED_PAGE_2', competitors.slice(4).map(renderCompetitor).join('') || '<div style="color:#64748b; font-style:italic; text-align: center; margin-top: 40px; font-size:9pt; border: 1px dashed #cbd5e1; padding: 20px;">No additional competitors detailed.</div>');
 
-  const compRowHtml = report.marketDynamics.competitiveLandscape.map(c => `
+  const compRowHtml = report.marketDynamics.featureComparison.map(f => `
     <tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${c.valueProposition}</td>
-        <td>${c.vulnerability}</td>
-        <td><span class="badge ${c.status === 'Active' ? 'badge-blue' : 'badge-slate'}">${c.status.toUpperCase()}</span></td>
+        <td><strong>${f.feature}</strong></td>
+        <td>${f.us ? f.advantage : 'N/A'}</td>
+        <td>${f.competitor ? 'Yes' : 'No'}</td>
+        <td><span class="badge ${f.us ? 'badge-blue' : 'badge-slate'}">${f.us ? 'Superior' : 'Standard'}</span></td>
     </tr>
   `).join('');
   replace('COMPETITOR_ROWS', compRowHtml);

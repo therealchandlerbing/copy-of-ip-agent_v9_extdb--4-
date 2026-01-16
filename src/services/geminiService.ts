@@ -2,7 +2,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { AssessmentReport, AssessmentStatus, InputType, ChatMessage } from "../types";
 
-const API_KEY = process.env.API_KEY || '';
+
 
 // --- SECTOR WEIGHTING RUBRIC (DETERMINISTIC) ---
 const SECTOR_WEIGHTS: Record<string, { tech: number, ip: number, market: number, regulatory: number, financial: number }> = {
@@ -414,7 +414,12 @@ export class GeminiService {
   private ai: GoogleGenAI;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    // Fallback to dummy key if env var is missing to prevent browser crash on startup
+    const apiKey = (typeof process !== 'undefined' ? process.env.API_KEY : undefined)
+      || (typeof import.meta !== 'undefined' ? import.meta.env?.VITE_GOOGLE_API_KEY : undefined)
+      || 'dummy_key_for_init';
+
+    this.ai = new GoogleGenAI({ apiKey });
   }
 
   // Helper to clean JSON string with robust escape handling
