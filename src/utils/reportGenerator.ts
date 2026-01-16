@@ -74,47 +74,103 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   // --- SVG GENERATORS (New for High Fidelity Print) ---
 
   const generateRiskGauge = (score: number, color: string) => {
-    // Simple SVG gauge
-    const radius = 50;
-    const stroke = 10;
-    const normalizedRadius = radius - stroke * 2;
-    const circumference = normalizedRadius * 2 * Math.PI;
+    // High Fidelity Segmented Gauge (Matches Dashboard RiskGauge)
+    const size = 160;
+    const strokeWidth = 16;
+    const radius = (size - strokeWidth) / 2;
+    const circumference = radius * 2 * Math.PI;
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
+    // Determine color hex based on logic (passed in, but we can enforce local logic if needed for SVG specific tweaking)
+    // Using passed 'color' which is already hex.
+
     return `
-      <svg width="120" height="120" viewBox="0 0 120 120">
-        <circle stroke="#e2e8f0" stroke-width="${stroke}" fill="transparent" r="${normalizedRadius}" cx="60" cy="60" />
-        <circle stroke="${color}" stroke-width="${stroke}" stroke-dasharray="${circumference} ${circumference}" style="stroke-dashoffset: ${strokeDashoffset}; transform-origin: 60px 60px; transform: rotate(-90deg);" stroke-linecap="round" fill="transparent" r="${normalizedRadius}" cx="60" cy="60" />
-        <text x="60" y="65" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#0f172a">${score}</text>
-        <text x="60" y="80" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="8" fill="#64748b">INDEX</text>
+      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+        <!-- Background Track -->
+        <circle cx="${size / 2}" cy="${size / 2}" r="${radius}" fill="none" stroke="#f1f5f9" stroke-width="${strokeWidth}" transform="rotate(-90 ${size / 2} ${size / 2})" />
+        
+        <!-- Progress Arc -->
+        <circle 
+            cx="${size / 2}" cy="${size / 2}" r="${radius}" 
+            fill="none" stroke="${color}" stroke-width="${strokeWidth}" 
+            stroke-dasharray="${circumference}" stroke-dashoffset="${strokeDashoffset}" 
+            stroke-linecap="round"
+            transform="rotate(-90 ${size / 2} ${size / 2})" 
+        />
+        
+        <!-- Center Text -->
+        <text x="50%" y="45%" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="38" fill="${color}" dominant-baseline="middle">${score}</text>
+        <text x="50%" y="65%" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="10" fill="#94a3b8" letter-spacing="1">RISK INDEX</text>
       </svg>
     `;
   };
 
   const generateTechSchematic = () => {
-    // Abstract "Node Graph" for visual flair
+    // "System Architecture" Schematic - Logic Node Graph
     return `
-       <svg width="600" height="200" viewBox="0 0 600 200">
+       <svg width="600" height="300" viewBox="0 0 600 300" style="background: #1e293b; border-radius: 8px;">
            <defs>
-               <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                   <feGaussianBlur stdDeviation="3" result="blur" />
+               <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+                   <feGaussianBlur stdDeviation="5" result="blur" />
                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
                </filter>
+               <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                   <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+               </marker>
            </defs>
+           
+           <!-- Grid Background -->
+           <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                </pattern>
+           </defs>
+           <rect width="100%" height="100%" fill="url(#grid)" />
+
            <!-- Connections -->
-           <path d="M100,100 L250,100" stroke="#334155" stroke-width="2" />
-           <path d="M350,100 L500,100" stroke="#334155" stroke-width="2" />
-           <path d="M300,50 L300,150" stroke="#334155" stroke-width="2" />
+           <!-- Input -> Logic -->
+           <path d="M120,150 L250,150" stroke="#334155" stroke-width="2" marker-end="url(#arrowhead)" />
            
-           <!-- Nodes -->
-           <rect x="250" y="50" width="100" height="100" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2" filter="url(#glow)" />
-           <circle cx="100" cy="100" r="30" fill="#0f172a" stroke="#10b981" stroke-width="2" />
-           <circle cx="500" cy="100" r="30" fill="#0f172a" stroke="#fbbf24" stroke-width="2" />
+           <!-- Logic -> Output -->
+           <path d="M350,150 L480,150" stroke="#334155" stroke-width="2" marker-end="url(#arrowhead)" />
            
-           <!-- Labels -->
-           <text x="300" y="105" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="12">CORE LOGIC</text>
-           <text x="100" y="105" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="10">INPUT</text>
-           <text x="500" y="105" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="10">OUTPUT</text>
+           <!-- Constraint -> Logic -->
+           <path d="M300,230 L300,190" stroke="#334155" stroke-width="2" stroke-dasharray="4" />
+
+           <!-- CENTRAL NODE (Logic) -->
+           <g transform="translate(300, 150)">
+               <circle r="50" fill="#1e293b" stroke="#3b82f6" stroke-width="3" filter="url(#glow-blue)" />
+               <circle r="40" fill="none" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.5" />
+               <!-- Icon placeholder (Microchip) -->
+               <rect x="-15" y="-15" width="30" height="30" fill="#60a5fa" rx="4" />
+               <line x1="-20" y1="0" x2="-15" y2="0" stroke="#60a5fa" stroke-width="2" />
+               <line x1="15" y1="0" x2="20" y2="0" stroke="#60a5fa" stroke-width="2" />
+               <line x1="0" y1="-20" x2="0" y2="-15" stroke="#60a5fa" stroke-width="2" />
+               <line x1="0" y1="15" x2="0" y2="20" stroke="#60a5fa" stroke-width="2" />
+               
+               <text x="0" y="70" text-anchor="middle" fill="#93c5fd" font-family="monospace" font-size="10" font-weight="bold">PROCESSING UNIT</text>
+           </g>
+
+           <!-- INPUT NODE -->
+           <g transform="translate(80, 150)">
+                <rect x="-40" y="-30" width="80" height="60" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="2" />
+                <text x="0" y="5" text-anchor="middle" fill="#34d399" font-family="sans-serif" font-size="10" font-weight="bold">INPUT</text>
+                <text x="0" y="45" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">SENSOR ARRAY</text>
+           </g>
+
+           <!-- OUTPUT NODE -->
+           <g transform="translate(520, 150)">
+                <rect x="-40" y="-30" width="80" height="60" rx="6" fill="#0f172a" stroke="#fbbf24" stroke-width="2" />
+                <text x="0" y="5" text-anchor="middle" fill="#fbbf24" font-family="sans-serif" font-size="10" font-weight="bold">OUTPUT</text>
+                <text x="0" y="45" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">ACTUATOR</text>
+           </g>
+           
+           <!-- CONSTRAINT NODE -->
+           <g transform="translate(300, 250)">
+                <rect x="-50" y="-15" width="100" height="30" rx="15" fill="#0f172a" stroke="#ef4444" stroke-width="1" stroke-dasharray="2 2"/>
+                <text x="0" y="5" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="9">MAX POWER &lt; 5W</text>
+           </g>
+
        </svg>
      `;
   };

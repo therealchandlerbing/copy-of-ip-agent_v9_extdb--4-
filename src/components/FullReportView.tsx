@@ -960,46 +960,58 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                     </div>
 
                     {/* Plot Patents on Radar */}
-                    {report.ipDeepDive.blockingPatents.map((p, i) => {
-                        // Determine Distance based on Risk
-                        // High Risk = Close (15% - 25% from center)
-                        // Medium Risk = Mid (30% - 50%)
-                        // Low Risk = Far (60% - 85%)
-                        const risk = p.ftoRisk ? p.ftoRisk.toLowerCase() : 'medium';
-                        const baseDist = risk === 'high' ? 20 : risk === 'medium' ? 40 : 70;
-                        const randomVar = (i * 13) % 10; // Deterministic Variance
-                        const distance = baseDist + randomVar;
+                    {report.ipDeepDive.blockingPatents?.length > 0 ? (
+                        report.ipDeepDive.blockingPatents.map((p, i) => {
+                            // Determine Distance based on Risk
+                            // High Risk = Close (15% - 25% from center)
+                            // Medium Risk = Mid (30% - 50%)
+                            // Low Risk = Far (60% - 85%)
+                            const risk = p.ftoRisk ? p.ftoRisk.toLowerCase() : 'medium';
+                            const baseDist = risk === 'high' ? 20 : risk === 'medium' ? 40 : 70;
+                            const randomVar = (i * 13) % 10; // Deterministic Variance
+                            const distance = baseDist + randomVar;
 
-                        // Determine Angle
-                        const angle = (i * 137.5) % 360; // Golden Angle for distribution
-                        const color = risk === 'high' ? 'bg-red-500' : risk === 'medium' ? 'bg-amber-500' : 'bg-emerald-500';
-                        const glow = risk === 'high' ? 'shadow-[0_0_15px_rgba(239,68,68,0.6)]' : risk === 'medium' ? 'shadow-[0_0_15px_rgba(245,158,11,0.5)]' : 'shadow-[0_0_15px_rgba(16,185,129,0.5)]';
+                            // Determine Angle
+                            const angle = (i * 137.5) % 360; // Golden Angle for distribution
+                            const color = risk === 'high' ? 'bg-red-500' : risk === 'medium' ? 'bg-amber-500' : 'bg-emerald-500';
+                            const glow = risk === 'high' ? 'shadow-[0_0_15px_rgba(239,68,68,0.6)]' : risk === 'medium' ? 'shadow-[0_0_15px_rgba(245,158,11,0.5)]' : 'shadow-[0_0_15px_rgba(16,185,129,0.5)]';
 
-                        return (
-                            <div
-                                key={i}
-                                className="absolute top-1/2 left-1/2 w-0 h-0 z-20"
-                                style={{ transform: `rotate(${angle}deg)` }}
-                            >
+                            return (
                                 <div
-                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 group"
-                                    style={{ left: `${distance}%` }} // Simplified, assumes container is responsive enough. Actually % left works if we rotate parent container. 
-                                // RE-THINK: Rotating a 0x0 div is easiest way to place angularly.
-                                // wait, `left: distance%` on a rotated container moves it "out" along that angle? No, it moves it along X axis OF THE ROTATED CONTAINER. Yes.
+                                    key={i}
+                                    className="absolute top-1/2 left-1/2 w-0 h-0 z-20"
+                                    style={{ transform: `rotate(${angle}deg)` }}
                                 >
-                                    {/* Rotated back content to be upright? No, just dots for now, hover details can handle it */}
-                                    <div className={`w-4 h-4 ${color} rounded-full ${glow} border-2 border-slate-900 cursor-pointer hover:scale-150 transition-transform relative`} style={{ transform: `rotate(-${angle}deg)` }}>
-                                        {/* Tooltip Card */}
-                                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 bg-white text-slate-900 p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left border border-slate-200">
-                                            <div className="text-[9px] font-bold text-slate-400 uppercase mb-1">{p.holder}</div>
-                                            <div className="text-xs font-bold leading-tight mb-2">Pat: {p.patentNumber}</div>
-                                            <Badge size="xs" color={risk === 'high' ? 'red' : risk === 'medium' ? 'amber' : 'emerald'}>{risk.toUpperCase()}</Badge>
+                                    <div
+                                        className="absolute transform -translate-x-1/2 -translate-y-1/2 group"
+                                        style={{ left: `${distance}%` }} // Simplified, assumes container is responsive enough. Actually % left works if we rotate parent container. 
+                                    // RE-THINK: Rotating a 0x0 div is easiest way to place angularly.
+                                    // wait, `left: distance%` on a rotated container moves it \"out\" along that angle? No, it moves it along X axis OF THE ROTATED CONTAINER. Yes.
+                                    >
+                                        {/* Rotated back content to be upright? No, just dots for now, hover details can handle it */}
+                                        <div className={`w-4 h-4 ${color} rounded-full ${glow} border-2 border-slate-900 cursor-pointer hover:scale-150 transition-transform relative`} style={{ transform: `rotate(-${angle}deg)` }}>
+                                            {/* Tooltip Card */}
+                                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 bg-white text-slate-900 p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left border border-slate-200">
+                                                <div className="text-[9px] font-bold text-slate-400 uppercase mb-1">{p.holder}</div>
+                                                <div className="text-xs font-bold leading-tight mb-2">Pat: {p.patentNumber}</div>
+                                                <Badge size="xs" color={risk === 'high' ? 'red' : risk === 'medium' ? 'amber' : 'emerald'}>{risk.toUpperCase()}</Badge>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            );
+                        })
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center z-30">
+                            <div className="text-center max-w-md">
+                                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/50">
+                                    <i className="fa-solid fa-check text-2xl text-emerald-400"></i>
+                                </div>
+                                <p className="text-sm font-bold text-emerald-400 mb-2">Clean IP Landscape</p>
+                                <p className="text-xs text-slate-400 leading-relaxed">No blocking patents identified in the current analysis. This indicates a favorable Freedom-to-Operate position.</p>
                             </div>
-                        );
-                    })}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -1021,15 +1033,15 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                                     </h3>
                                     <div className="space-y-4">
                                         <div>
-                                            <p className="text-3xl font-black text-white mb-1">{report.marketDynamics.marketSizeAnalysis.tam}</p>
+                                            <p className="text-3xl font-black text-white mb-1">{report.marketDynamics.marketSizeAnalysis.totalAddressableMarket}</p>
                                             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Addressable Market (TAM)</p>
                                         </div>
                                         <div className="pl-4 border-l-2 border-indigo-500/50">
-                                            <p className="text-xl font-bold text-white mb-1">{report.marketDynamics.marketSizeAnalysis.sam}</p>
+                                            <p className="text-xl font-bold text-white mb-1">{report.marketDynamics.marketSizeAnalysis.serviceableAvailableMarket}</p>
                                             <p className="text-xs font-bold text-indigo-200 uppercase tracking-wider">Serviceable Available (SAM)</p>
                                         </div>
                                         <div className="pl-4 border-l-2 border-emerald-500/50">
-                                            <p className="text-lg font-bold text-white mb-1">{report.marketDynamics.marketSizeAnalysis.som}</p>
+                                            <p className="text-lg font-bold text-white mb-1">{report.marketDynamics.marketSizeAnalysis.serviceableAvailableMarket}</p>
                                             <p className="text-xs font-bold text-emerald-300 uppercase tracking-wider">Serviceable Obtainable (SOM)</p>
                                         </div>
                                     </div>
@@ -1137,16 +1149,16 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            {report.marketDynamics.graveyard?.length > 0 ? (
-                                report.marketDynamics.graveyard.map((g, i) => (
+                            {report.marketDynamics.graveyard?.failedProducts?.length > 0 ? (
+                                report.marketDynamics.graveyard.failedProducts.map((g, i) => (
                                     <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-bold text-slate-900 text-xs leading-tight">{g.company}</h4>
-                                            <span className="text-[9px] font-bold text-slate-400 bg-slate-50 px-1 rounded">{g.year}</span>
+                                            <span className="text-[9px] font-bold text-slate-400 bg-slate-50 px-1 rounded">{g.timeline}</span>
                                         </div>
-                                        <p className="text-[10px] text-slate-500 leading-snug mb-3 flex-1">"{g.causeOfDeath}"</p>
+                                        <p className="text-[10px] text-slate-500 leading-snug mb-3 flex-1">"{g.failureMode}"</p>
                                         <div className="pt-2 border-t border-slate-100 text-center">
-                                            <span className="text-[8px] font-bold text-red-300 uppercase tracking-widest">R.I.P.</span>
+                                            <span className="text-[8px] font-bold text-red-300 uppercase tracking-widest">Rest in Peace</span>
                                         </div>
                                     </div>
                                 ))
