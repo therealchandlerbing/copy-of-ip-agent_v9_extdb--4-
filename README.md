@@ -385,6 +385,7 @@ npm install
 # Create a .env file and add your Gemini API key:
 echo "VITE_GOOGLE_API_KEY=your_api_key_here" > .env
 # Then edit .env with your actual API key
+# Get your API key from: https://aistudio.google.com/app/apikey
 
 # 4. Start development server
 npm run dev
@@ -402,7 +403,7 @@ npm run dev
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `VITE_GOOGLE_API_KEY` | Yes | Your Google Gemini API key (Vite prefix required for client-side access) |
+| `VITE_GOOGLE_API_KEY` | Yes | Your Google Gemini API key - VITE_ prefix required for client-side access. Get it from https://aistudio.google.com/app/apikey |
 
 ---
 
@@ -896,7 +897,7 @@ const newSectionResult = await model.generateContent({
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| "API key not found" | Missing `VITE_GOOGLE_API_KEY` | Add key to `.env` file with `VITE_` prefix |
+| "API key not valid" or "Google API key not found" | Missing or invalid `VITE_GOOGLE_API_KEY` | Create `.env` file with `VITE_GOOGLE_API_KEY=your_key` (VITE_ prefix required) |
 | HTTP 429 errors | Rate limiting | Wait and retry with backoff |
 | Empty report sections | API timeout | Increase timeout, check network |
 | "Module not found" | Missing dependencies | Run `npm install` |
