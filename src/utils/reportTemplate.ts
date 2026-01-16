@@ -6,7 +6,7 @@ export const REPORT_TEMPLATE = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innovation Compass Assessment</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- DESIGN SYSTEM: "Obsidian & Gold" Premium Theme (Print Optimized) --- */
@@ -117,7 +117,7 @@ export const REPORT_TEMPLATE = `
         /* --- COVER PAGE --- */
         .page-cover { background: var(--color-primary); color: white; padding: 0; }
         .cover-content { padding: 20mm; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
-        .cover-accent-bar { position: absolute; top: 0; left: 20mm; width: 4px; height: 40mm; background: var(--color-accent); }
+        .cover-accent-bar { position: absolute; top: 0; left: 10mm; width: 4px; height: 40mm; background: var(--color-accent); }
         .cover-title { font-family: var(--font-display); font-size: 42pt; font-weight: 600; line-height: 1.1; margin-bottom: 5mm; }
         .cover-subtitle { font-family: var(--font-body); font-size: 14pt; font-weight: 300; color: #94a3b8; max-width: 80%; }
         .cover-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15mm; padding-top: 10mm; border-top: 1px solid rgba(255,255,255,0.15); }
@@ -809,6 +809,12 @@ export const REPORT_TEMPLATE = `
               <div class="markdown-content" style="font-size:10pt; line-height:1.7; color:#1e293b;">
                   {{INSIGHTS_NARRATIVE}}
               </div>
+
+              <div style="margin-top:15mm; text-align:right;">
+                  <div style="font-family:'Dancing Script', cursive; font-size:24pt; color:var(--color-primary); margin-bottom:-2mm; margin-right:10mm; position:relative; z-index:10;">Dr. Arcus A.I.</div>
+                  <div style="width:60mm; margin-left:auto; border-bottom:1px solid #1e293b; margin-bottom:2mm;"></div>
+                  <div style="font-size:7pt; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#64748b;">Digital Signature Verified</div>
+              </div>
           </div>
           <div class="footer"><span>Confidential</span><span>Page 39</span></div>
       </div>
@@ -820,11 +826,6 @@ export const REPORT_TEMPLATE = `
               <h2>Strategic Mandates</h2>
               <div class="grid-3">
                   {{INSIGHTS_RECS}}
-              </div>
-              
-              <div style="margin-top:15mm; text-align:right;">
-                  <div style="width:50mm; height:10mm; margin-left:auto; border-bottom:1px solid black; margin-bottom:2mm;"></div>
-                  <div style="font-size:8pt; font-weight:700; text-transform:uppercase;">Digital Signature Verified</div>
               </div>
           </div>
           <div class="footer"><span>Confidential</span><span>Page 40</span></div>
