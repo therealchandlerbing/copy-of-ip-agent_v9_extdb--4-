@@ -30,11 +30,11 @@ export function checkGoogleApiKey(): EnvCheckResult {
       };
     }
 
-    // Basic validation - Google API keys typically start with "AIza"
-    if (apiKey.length < 20) {
+    // Basic validation - Google API keys are 39 characters and start with "AIza"
+    if (!apiKey.startsWith('AIza') || apiKey.length !== 39) {
       return {
         isConfigured: false,
-        error: 'VITE_GOOGLE_API_KEY appears to be invalid (too short)'
+        error: 'VITE_GOOGLE_API_KEY appears to be invalid (incorrect format or length)'
       };
     }
 
@@ -54,13 +54,15 @@ export function checkGoogleApiKey(): EnvCheckResult {
  * Get setup instructions for missing API key
  */
 export function getApiKeySetupInstructions(): string {
-  return `To configure the Google API key:
+  return `⚠️ Configuration Required
 
-1. Create a .env file in the project root (if it doesn't exist)
-2. Add this line: VITE_GOOGLE_API_KEY=your_actual_api_key
+The Google API key is not configured correctly. To fix this:
+
+1. Create a .env file in the project root (if it doesn't exist).
+2. Add the following line:
+   VITE_GOOGLE_API_KEY=your_api_key_here
 3. Get your API key from: https://aistudio.google.com/app/apikey
-4. Restart the development server (npm run dev)
+4. Restart the development server (e.g., 'npm run dev').
 
-Note: In Vite, environment variables are embedded at build time.
-For production builds, ensure the .env file exists before building.`;
+Note: In Vite, environment variables are embedded at build time. You must restart the server after changing .env files.`;
 }

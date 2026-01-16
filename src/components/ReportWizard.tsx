@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gemini } from '../services/geminiService';
 import { AssessmentReport, Question } from '../types';
+import { getApiKeySetupInstructions } from '../utils/envCheck';
 
 // --- QUESTIONNAIRE DEFINITIONS (PRD 3.2.1) ---
 const CORE_QUESTIONS: Question[] = [
@@ -261,15 +262,7 @@ const ReportWizard: React.FC<ReportWizardProps> = ({ onComplete, onCancel }) => 
       // Show detailed error message to user
       setTimeout(() => {
         if (errorMessage.includes('API key not found') || errorMessage.includes('VITE_GOOGLE_API_KEY')) {
-          alert(
-            "⚠️ Configuration Required\n\n" +
-            "Google API key is not configured. To fix this:\n\n" +
-            "1. Create a .env file in the project root\n" +
-            "2. Add: VITE_GOOGLE_API_KEY=your_api_key_here\n" +
-            "3. Get your API key from: https://aistudio.google.com/app/apikey\n" +
-            "4. Restart the development server\n\n" +
-            "Note: Environment variables are loaded at build time in Vite."
-          );
+          alert(getApiKeySetupInstructions());
         } else {
           alert(`Analysis failed: ${errorMessage}\n\nPlease check the console for more details.`);
         }

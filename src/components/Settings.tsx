@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { checkGoogleApiKey, getApiKeySetupInstructions } from '../utils/envCheck';
 
 const Settings: React.FC = () => {
