@@ -86,7 +86,10 @@ const DEFAULT_SYNTHESIS = {
       tier1Count: 0,
       tier2Count: 0,
       tier3Count: 0,
-      summaryParagraph: "Executive summary unavailable due to processing error."
+      summaryParagraph: "Executive summary unavailable due to processing error.",
+      recommendation: "N/A",
+      keyCondition: "N/A",
+      investmentRequired: "N/A"
     },
     criticalConcerns: [],
     keyStrengths: [],
@@ -177,8 +180,9 @@ STYLE GUIDE:
 INSTRUCTIONS:
 1. SEARCH STRATEGY: Define at least 3 specific CPC/IPC subclasses.
 2. BLOCKING PATENTS:
-   - Identify 3-4 real, high-threat assignees.
-   - Fabricate realistic "Proxy Patents" if exact numbers aren't known, but describe the *actual* technology.
+   - Identify 3-4 REAL, high-threat assignees with ACTUAL patent numbers.
+   - **CRITICAL**: Do NOT use "Proxy" or placeholder numbers. You MUST find and cite real patent numbers (e.g., US-10,xxx,xxx or EP-3,xxx,xxx).
+   - If exact blocking text isn't found, cite the most relevant existing patent in the space.
    - For every block, provide a "Differentiation Opportunity" (Design-around).
 3. WHITESPACE (300 Words): Detailed technical description of the open lane.
 4. COMMERCIAL LEVERAGE: Who would PAY for this?
@@ -371,7 +375,10 @@ OUTPUT JSON FORMAT:
       "tier1Count": number,
       "tier2Count": number,
       "tier3Count": number,
-      "summaryParagraph": "string (min 400 words. Use **bolding**. Comprehensive synthesis.)"
+      "summaryParagraph": "string (min 400 words. Use **bolding**. Comprehensive synthesis.)",
+      "recommendation": "string (Short, punchy verdict e.g. 'CONDITIONAL PROCEED')",
+      "keyCondition": "string (The single most important condition e.g. 'Pending Sensor POC')",
+      "investmentRequired": "string (Total to FDA e.g. 'Est. $18-22M')"
     },
     "criticalConcerns": [{ "title": "string", "what": "string", "whyItMatters": "string", "resolution": "string", "tier": 1|2 }],
     "keyStrengths": [{ "title": "string", "description": "string", "evidence": "string" }],
@@ -395,10 +402,17 @@ OUTPUT JSON FORMAT:
 
 const EXTRACTION_PROMPT = `
 You are analyzing innovation disclosure documents. Combine the context from all provided documents to extract key details.
-If specific names (Client, Inventor) are missing, use "Confidential Client" or "Undisclosed Inventor".
+
+**CRITICAL INSTRUCTION**: You must make every effort to identify the specific names involved.
+1. **Innovation Name**: Look for the product name, project title, or system name (e.g., "Hypen", "Arcus", "Project X"). Do NOT use "Untitled Innovation" unless the document is literally blank.
+2. **Client Name**: Look for the company name, university, or entity submitting the disclosure (e.g., "ERVIEGAS", "Stanford University").
+3. **Inventor Name**: Look for the lead researcher or inventor.
+
+If specific names are absolutely missing after a thorough search, only then use "Confidential Client" or "Undisclosed Inventor".
+
 Output JSON:
 {
-  "q1_innovation_name": "string",
+  "q1_innovation_name": "string (The specific name found. Do not use generic placeholders.)",
   "q2_problem_statement": "string",
   "q3_solution_description": "string",
   "q4_sector": "string (Infer best fit: Medical Devices, Software, Energy, Consumer, Materials, Biotech, etc.)",
@@ -695,7 +709,7 @@ export class GeminiService {
     const [ipDeepDive, marketDynamicsResponse, visualConcept] = await Promise.all([
       this.executeDirective("IP Analysis", PATENT_ATTORNEY_PROMPT, sectorContext, DEFAULT_IP_DEEP_DIVE, true, 4096),
       this.executeDirective("Market Dynamics", MARKET_STRATEGIST_PROMPT, sectorContext, DEFAULT_MARKET_DYNAMICS, true, 4096),
-      this.generateProductConcept(`Industrial design concept for ${innovationName}: ${innovationDesc}`, '1K').then(url => ({ imageUrl: url, prompt: innovationDesc })).catch(() => undefined)
+      this.generateProductConcept(`Industrial design concept for ${innovationName}. Context: ${innovationDesc}. Device Form Factor: Use context to determine if handheld, wearyable, or benchtop. Photorealistic product photography.`, '1K').then(url => ({ imageUrl: url, prompt: innovationDesc })).catch(() => undefined)
     ]);
 
     const marketDynamics = { ...DEFAULT_MARKET_DYNAMICS, ...marketDynamicsResponse };

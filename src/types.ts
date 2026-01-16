@@ -47,6 +47,10 @@ export interface ExecutiveSummary {
     tier2Count: number;
     tier3Count: number;
     summaryParagraph: string;
+    // Verdict Box New Fields
+    recommendation: string; // e.g. "CONDITIONAL PROCEED"
+    keyCondition: string;   // e.g. "Pending Sensor POC"
+    investmentRequired: string; // e.g. "$18-22M"
     scoringBreakdown?: ScoringBreakdown; // New deterministic scoring data
   };
   criticalConcerns: {

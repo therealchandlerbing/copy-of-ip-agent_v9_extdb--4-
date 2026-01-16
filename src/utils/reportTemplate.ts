@@ -76,8 +76,15 @@ export const REPORT_TEMPLATE = `
         
         /* Table Styles (Updated for Readability) */
         table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 6mm; }
+        caption { text-align: left; font-size: 8pt; font-weight: 700; color: var(--color-neutral); text-transform: uppercase; margin-bottom: 2mm; letter-spacing: 0.5px; }
         th { text-align: left; font-weight: 700; text-transform: uppercase; font-size: 7pt; color: var(--color-primary); background-color: var(--bg-subtle); padding: 3mm 2mm; border-bottom: 1px solid var(--color-primary); }
         td { border-bottom: 1px solid var(--border-light); padding: 3mm 2mm; vertical-align: top; }
+        
+        /* Column Width Utilities */
+        .col-param { width: 25%; }
+        .col-val   { width: 15%; }
+        .col-bench { width: 20%; }
+        .col-note  { width: 40%; }
         
         .badge { display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; font-size: 6.5pt; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
         .badge-green { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
@@ -205,20 +212,32 @@ export const REPORT_TEMPLATE = `
             <div style="font-family:var(--font-display); font-size:11pt; color:var(--color-primary);">1.1 Risk Profile</div>
         </div>
         <div class="content">
-            <div style="display: flex; align-items: center; gap: 30px; margin-bottom: 8mm; background: var(--bg-subtle); padding: 8mm; border-radius: 4px;">
-                <!-- SVG GAUGE PLACEHOLDER -->
-                <div class="svg-container" style="width: 120px; height: 120px; flex-shrink: 0; margin-bottom:0;">
-                    {{RISK_GAUGE_SVG}}
-                </div>
+            <!-- EXECUTIVE VERDICT BOX (New Layout) -->
+            <div style="display: flex; margin-bottom: 8mm; background: #ffffff; border: 1px solid var(--color-primary); border-radius: 4px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
                 
-                <div style="flex: 1;">
-                    <div style="font-size:7pt; font-weight:700; color:var(--color-neutral); text-transform:uppercase; margin-bottom:5px;">Composite Status</div>
-                    <div style="font-family:var(--font-display); font-size:24pt; font-weight:700; color:var(--color-primary); margin-bottom:5px; line-height:1;">{{RISK_LEVEL_TEXT}}</div>
-                    <div style="font-size:9pt; color:var(--color-primary-light);">{{RISK_COUNTS_TEXT}}</div>
+                <!-- 1. GAUGE SECTION (Left) -->
+                <div style="width: 140px; background: var(--bg-subtle); padding: 5mm; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid var(--border-light);">
+                    <div class="svg-container" style="width: 100px; height: 100px; margin-bottom: 5px;">
+                        {{RISK_GAUGE_SVG}}
+                    </div>
                 </div>
-                <div style="border-left:1px solid var(--border-med); padding-left:8mm; max-width: 40%;">
-                    <div style="font-size:7pt; font-weight:700; color:var(--color-accent); text-transform:uppercase; margin-bottom:3px;">Advisor Note</div>
-                    <p style="font-size:8pt; font-style:italic; margin:0; color:var(--color-primary-light);">"Instant snapshot of technical and market viability based on {{RISK_SCORE}} distinct data points."</p>
+
+                <!-- 2. VERDICT SECTION (Center) -->
+                <div style="flex: 1; padding: 6mm; display: flex; flex-direction: column; justify-content: center;">
+                    <div style="font-size: 8pt; font-weight: 700; color: var(--color-neutral); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Strategic Recommendation</div>
+                    <div style="font-family: var(--font-display); font-size: 22pt; font-weight: 700; color: var(--color-primary); line-height: 1.1; margin-bottom: 6px;">
+                        {{VERDICT_RECOMMENDATION}}
+                    </div>
+                    <div style="font-size: 9pt; color: #b91c1c; background: #fef2f2; padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                        <strong>Condition:</strong> {{VERDICT_CONDITION}}
+                    </div>
+                </div>
+
+                <!-- 3. INVESTMENT SNAPSHOT (Right) -->
+                 <div style="width: 160px; background: var(--color-primary); color: white; padding: 6mm; display: flex; flex-direction: column; justify-content: center; text-align: right;">
+                    <div style="font-size: 7pt; font-weight: 600; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px;">Total to FDA</div>
+                    <div style="font-family: var(--font-display); font-size: 18pt; font-weight: 700; margin-bottom: 2px;">{{VERDICT_INVESTMENT}}</div>
+                    <div style="font-size: 8pt; color: #cbd5e1;">Investment Req.</div>
                 </div>
             </div>
             
@@ -329,7 +348,15 @@ export const REPORT_TEMPLATE = `
             <div class="markdown-content" style="margin-bottom:8mm;">{{MECHANISM_EXPLANATION}}</div>
             
             <h2>Technical Specifications</h2>
+            <h2>Technical Specifications</h2>
             <table>
+                 <caption>Table 2.1: Key Technical Specifications vs Benchmark</caption>
+                 <colgroup>
+                    <col class="col-param" />
+                    <col class="col-val" />
+                    <col class="col-bench" />
+                    <col class="col-note" />
+                 </colgroup>
                 <thead><tr><th>Parameter</th><th>Value</th><th>Benchmark (SOTA)</th><th>Notes</th></tr></thead>
                 <tbody>{{SPECS_ROWS}}</tbody>
             </table>

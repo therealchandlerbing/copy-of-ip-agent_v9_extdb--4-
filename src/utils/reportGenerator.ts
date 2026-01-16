@@ -11,7 +11,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
 
     if (isMarkdown) {
       // 1. Bold: **text** -> <strong>text</strong>
-      valStr = valStr.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      valStr = valStr.replace(/\*\*([\s\S]*?)\*\*/g, '<strong>$1</strong>');
 
       // 2. Blockquotes / Callouts: > text
       valStr = valStr.replace(/^> (.*$)/gm, '<blockquote style="border-left: 4px solid #3b82f6; background-color: #f8fafc; padding: 10px; margin: 10px 0; font-style: italic; color: #475569;">$1</blockquote>');
@@ -189,8 +189,12 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
 
   replace('RISK_COLOR', riskColor);
   replace('RISK_SCORE', riskScore);
-  replace('RISK_LEVEL_TEXT', `${report.executiveSummary.riskProfile.riskLevel.toUpperCase()} RISK PROFILE`);
-  replace('RISK_COUNTS_TEXT', `${report.executiveSummary.riskProfile.tier1Count} Critical Issues | ${report.executiveSummary.riskProfile.tier2Count} Major Issues`);
+
+  // Executive Verdict Box Fields
+  replace('VERDICT_RECOMMENDATION', report.executiveSummary.riskProfile.recommendation || "CONDITIONAL PROCEED");
+  replace('VERDICT_CONDITION', report.executiveSummary.riskProfile.keyCondition || "Pending Technical Validation");
+  replace('VERDICT_INVESTMENT', report.executiveSummary.riskProfile.investmentRequired || "Est. $15-20M");
+
   replace('RISK_SUMMARY_TEXT', report.executiveSummary.riskProfile.summaryParagraph, true);
 
   // Formatting concerns - Numbered List for Critical Red Flags
@@ -515,7 +519,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
             <strong>${a.phase}</strong>
             <div style="font-size: 7.5pt; color: #64748b;">${a.months}</div>
         </td>
-        <td>${a.budget}</td>
+        <td style="text-align: right;">${a.budget}</td>
         <td>${a.activities}</td>
     </tr>
   `).join('');
@@ -524,7 +528,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   const bomHtml = report.financialRoadmap.unitEconomics.bom.map(b => `
     <tr>
         <td>${b.component}</td>
-        <td>${b.cost}</td>
+        <td style="text-align: right;">${b.cost}</td>
         <td>${b.supplier}</td>
     </tr>
   `).join('');
