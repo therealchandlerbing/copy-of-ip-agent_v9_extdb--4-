@@ -55,7 +55,7 @@ const MOCK_REPORT: AssessmentReport = {
         filingStrategy: { phases: [], priorityClaims: '', patentProtect: [], tradeSecrets: [] }
     },
     marketDynamics: {
-        marketSizeAnalysis: { totalAddressableMarket: '10B', serviceableAvailableMarket: '1B', cagr: '10%', forecastPeriod: '2030', keyDrivers: [], marketTrends: [] },
+        marketSizeAnalysis: { totalAddressableMarket: '10B', serviceableAvailableMarket: '1B', serviceableObtainableMarket: '$100M', cagr: '10%', forecastPeriod: '2030', keyDrivers: [], marketTrends: [] },
         graveyard: { intro: '', failedProducts: [] }, zombieCompetitors: { intro: '', companies: [] }, competitiveLandscape: [], featureComparison: [], gapAnalysis: { intro: '', gaps: [], unmetDemandEvidence: '' }, beachheadMarket: { profile: '', painPoint: '', toleranceReason: '', marketSize: '', expansionPath: '' }, customerAcquisition: [], monetization: { pricingAnalysis: [] }
     },
     regulatoryPathway: { classification: { intro: '', regulatoryClassification: '', pathway: '', timelineEstimate: '', standards: [] }, comparableSystems: [], timelineCost: [], recentDevelopments: { intro: '', developments: [] }, risks: [] },

@@ -397,6 +397,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   const sizing = report.marketDynamics.marketSizeAnalysis || {
     totalAddressableMarket: "N/A",
     serviceableAvailableMarket: "N/A",
+    serviceableObtainableMarket: "N/A",
     cagr: "N/A",
     forecastPeriod: "",
     keyDrivers: [],
@@ -404,6 +405,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   };
   replace('TAM', sizing.totalAddressableMarket);
   replace('SAM', sizing.serviceableAvailableMarket);
+  replace('SOM', sizing.serviceableObtainableMarket);
   replace('CAGR', sizing.cagr);
   replace('FORECAST', sizing.forecastPeriod);
 

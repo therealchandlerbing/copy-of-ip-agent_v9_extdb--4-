@@ -56,7 +56,7 @@ const MOCK_REPORT: AssessmentReport = {
         filingStrategy: { phases: [], priorityClaims: '', patentProtect: [], tradeSecrets: [] }
     },
     marketDynamics: {
-        marketSizeAnalysis: { totalAddressableMarket: '$1B', serviceableAvailableMarket: '$100M', cagr: '10%', forecastPeriod: '2030', keyDrivers: [], marketTrends: [] },
+        marketSizeAnalysis: { totalAddressableMarket: '$1B', serviceableAvailableMarket: '$100M', serviceableObtainableMarket: '$10M', cagr: '10%', forecastPeriod: '2030', keyDrivers: [], marketTrends: [] },
         graveyard: { intro: 'Graveyard', failedProducts: [] },
         zombieCompetitors: { intro: '', companies: [] },
         competitiveLandscape: [],
@@ -103,13 +103,13 @@ describe('reportGenerator', () => {
         const html = generateHtmlReport(MOCK_REPORT);
 
         // Check for Risk Gauge SVG injection
-        expect(html).toContain('<svg width="120" height="120"');
+        expect(html).toContain('<svg width="160" height="160"');
         expect(html).toContain('75</text>'); // The score
         expect(html).toContain('INDEX</text>');
 
         // Check for Tech Schematic SVG injection
-        expect(html).toContain('<svg width="600" height="200"');
-        expect(html).toContain('CORE LOGIC');
+        expect(html).toContain('<svg width="600" height="300"');
+        expect(html).toContain('PROCESSING UNIT');
     });
 
     it('should correctly format markdown content', () => {

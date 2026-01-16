@@ -46,6 +46,7 @@ const DEFAULT_MARKET_DYNAMICS = {
   marketSizeAnalysis: {
     totalAddressableMarket: "N/A",
     serviceableAvailableMarket: "N/A",
+    serviceableObtainableMarket: "N/A",
     cagr: "N/A",
     forecastPeriod: "N/A",
     keyDrivers: [],
@@ -255,6 +256,7 @@ OUTPUT JSON FORMAT:
   "marketSizeAnalysis": {
     "totalAddressableMarket": "string",
     "serviceableAvailableMarket": "string",
+    "serviceableObtainableMarket": "string (Year 1 Realistic Capture Target)",
     "cagr": "string",
     "forecastPeriod": "string",
     "keyDrivers": ["string"],

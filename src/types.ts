@@ -140,19 +140,19 @@ export interface IpDeepDive {
     gaps: string;
   };
   classificationAnalysis: string;
-  classificationCodes: { 
-    code: string; 
+  classificationCodes: {
+    code: string;
     description: string;
-    strategicImplication: string; 
+    strategicImplication: string;
   }[];
   whitespace: {
     intro: string;
     description: string;
     evidence: string;
     strategicPartnerships: {
-        licensingTargets: string;
-        partnershipModel: string;
-        rationale: string;
+      licensingTargets: string;
+      partnershipModel: string;
+      rationale: string;
     };
   };
   blockingPatents: {
@@ -191,6 +191,7 @@ export interface MarketDynamics {
   marketSizeAnalysis: {
     totalAddressableMarket: string;
     serviceableAvailableMarket: string;
+    serviceableObtainableMarket: string;
     cagr: string;
     forecastPeriod: string;
     keyDrivers: string[];
@@ -392,7 +393,7 @@ export interface AssessmentReport {
   status: AssessmentStatus;
   input_type: InputType;
   isExample?: boolean; // New Flag to separate mock data from live data
-  
+
   // Sections matching Schema
   cover: CoverSection;
   executiveSummary: ExecutiveSummary;

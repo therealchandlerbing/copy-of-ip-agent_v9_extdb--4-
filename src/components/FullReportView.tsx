@@ -1041,7 +1041,7 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                                             <p className="text-xs font-bold text-indigo-200 uppercase tracking-wider">Serviceable Available (SAM)</p>
                                         </div>
                                         <div className="pl-4 border-l-2 border-emerald-500/50">
-                                            <p className="text-lg font-bold text-white mb-1">{report.marketDynamics.marketSizeAnalysis.serviceableAvailableMarket}</p>
+                                            <p className="text-lg font-bold text-white mb-1">{report.marketDynamics.marketSizeAnalysis.serviceableObtainableMarket || report.marketDynamics.marketSizeAnalysis.serviceableAvailableMarket}</p>
                                             <p className="text-xs font-bold text-emerald-300 uppercase tracking-wider">Serviceable Obtainable (SOM)</p>
                                         </div>
                                     </div>

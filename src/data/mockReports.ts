@@ -13,7 +13,7 @@ export const MOCK_REPORTS: AssessmentReport[] = [
     status: AssessmentStatus.COMPLETED,
     input_type: InputType.HYBRID,
     isExample: true,
-    
+
     cover: {
       technologyName: "AccuFlow Hemodynamic Sensor",
       technologySubtitle: "Continuous Cardiac Output Monitoring",
@@ -185,6 +185,7 @@ export const MOCK_REPORTS: AssessmentReport[] = [
       marketSizeAnalysis: {
         totalAddressableMarket: "$2.4B",
         serviceableAvailableMarket: "$600M",
+        serviceableObtainableMarket: "$50M",
         cagr: "8.5%",
         forecastPeriod: "2024-2030",
         keyDrivers: ["Aging Population", "Shift to Home Care"],
@@ -205,9 +206,9 @@ export const MOCK_REPORTS: AssessmentReport[] = [
         { name: "CareTaker Medical", segment: "Challenger", geography: "US", valueProposition: "Wireless", vulnerability: "Cost", status: "Active" }
       ],
       featureComparison: [
-         { feature: "Non-Invasive", us: true, competitor: false, advantage: "Patient Comfort" },
-         { feature: "Continuous", us: true, competitor: true, advantage: "Parity" },
-         { feature: "Low Cost (<$50)", us: true, competitor: false, advantage: "Disposability" }
+        { feature: "Non-Invasive", us: true, competitor: false, advantage: "Patient Comfort" },
+        { feature: "Continuous", us: true, competitor: true, advantage: "Parity" },
+        { feature: "Low Cost (<$50)", us: true, competitor: false, advantage: "Disposability" }
       ],
       gapAnalysis: {
         intro: "Hospitals need a cheap, disposable option.",
@@ -292,11 +293,11 @@ export const MOCK_REPORTS: AssessmentReport[] = [
         ]
       }
     },
-    
+
     // Add visual concept
     productConcept: {
-        imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=2070",
-        prompt: "Wearable medical sensor patch, sleek white design, placed on wrist, soft glowing blue indicator, sterile hospital environment"
+      imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=2070",
+      prompt: "Wearable medical sensor patch, sleek white design, placed on wrist, soft glowing blue indicator, sterile hospital environment"
     }
   },
 
@@ -312,7 +313,7 @@ export const MOCK_REPORTS: AssessmentReport[] = [
     status: AssessmentStatus.COMPLETED,
     input_type: InputType.QUESTIONNAIRE,
     isExample: true,
-    
+
     cover: {
       technologyName: "CogniChain AI",
       technologySubtitle: "Autonomous Supply Chain Orchestration",
@@ -447,6 +448,7 @@ export const MOCK_REPORTS: AssessmentReport[] = [
       marketSizeAnalysis: {
         totalAddressableMarket: "$15B",
         serviceableAvailableMarket: "$2B",
+        serviceableObtainableMarket: "$20M",
         cagr: "18%",
         forecastPeriod: "2025-2029",
         keyDrivers: ["Supply Chain Volatility"],
@@ -530,14 +532,14 @@ export const MOCK_REPORTS: AssessmentReport[] = [
       ttoSynthesis: {
         insightNarrative: "The 'CogniChain' asset demonstrates high technical readiness (TRL 8) and clear operational utility. However, the commercialization strategy relies heavily on trade secret protection rather than a robust patent portfolio, which limits traditional licensing leverage.\n\nFrom a transferability standpoint, the asset is best positioned as a direct spin-out or an exclusive field-of-use license to a strategic partner who values the immediate operational efficiency over long-term IP exclusivity. The primary risk to value is the commoditization of the underlying data sources. \n\nThe strategic mandate is to secure long-term data exclusivity agreements to create a defensible 'moat' in the absence of strong patent protection. Immediate commercial deployment is recommended to capture market share before competitors replicate the logic.",
         keyRecommendations: [
-           { title: "Secure Data Exclusivity", description: "Lock in long-term data agreements to create a moat.", priority: "Critical" }
+          { title: "Secure Data Exclusivity", description: "Lock in long-term data agreements to create a moat.", priority: "Critical" }
         ]
       }
     },
 
     productConcept: {
-        imageUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2070",
-        prompt: "Futuristic digital dashboard, holographic supply chain map, data streams, dark mode UI, glowing nodes"
+      imageUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2070",
+      prompt: "Futuristic digital dashboard, holographic supply chain map, data streams, dark mode UI, glowing nodes"
     }
   },
 
@@ -553,7 +555,7 @@ export const MOCK_REPORTS: AssessmentReport[] = [
     status: AssessmentStatus.COMPLETED,
     input_type: InputType.DOCUMENT,
     isExample: true,
-    
+
     cover: {
       technologyName: "HelioGen Solar",
       technologySubtitle: "Spray-on Perovskite Photovoltaics",
@@ -597,11 +599,11 @@ export const MOCK_REPORTS: AssessmentReport[] = [
           tier: 1
         },
         {
-            title: "CapEx Intensity",
-            what: "Pilot line costs >$50M.",
-            whyItMatters: "High burn rate before revenue.",
-            resolution: "Partner with glass manufacturer.",
-            tier: 1
+          title: "CapEx Intensity",
+          what: "Pilot line costs >$50M.",
+          whyItMatters: "High burn rate before revenue.",
+          resolution: "Partner with glass manufacturer.",
+          tier: 1
         }
       ],
       keyStrengths: [
@@ -694,6 +696,7 @@ export const MOCK_REPORTS: AssessmentReport[] = [
       marketSizeAnalysis: {
         totalAddressableMarket: "$50B",
         serviceableAvailableMarket: "$500M",
+        serviceableObtainableMarket: "$5M",
         cagr: "25%",
         forecastPeriod: "2030-2040",
         keyDrivers: ["Green Building Mandates"],
@@ -769,15 +772,15 @@ export const MOCK_REPORTS: AssessmentReport[] = [
       ttoSynthesis: {
         insightNarrative: "HelioGen is a classic 'Science Project'—high potential impact but commercially immature (TRL 2). The material stability issues are fundamental physics problems that have plagued the perovskite field for a decade. Investing now is betting on a scientific breakthrough, not a business execution. \n\nFurthermore, the reliance on toxic lead precursors creates a binary regulatory risk in the EU market. \n\nRecommendation: Do not invest equity. Support via non-dilutive grant funding only until TRL 5 is achieved. Monitor competitors (Oxford PV) who are closer to solving the stability challenge.",
         keyRecommendations: [
-           { title: "Seek Grant Funding", description: "Apply for ARPA-E / Horizon Europe.", priority: "Critical" },
-           { title: "Lead-Free R&D", description: "Pivot chemistry to non-toxic alternatives.", priority: "High" }
+          { title: "Seek Grant Funding", description: "Apply for ARPA-E / Horizon Europe.", priority: "Critical" },
+          { title: "Lead-Free R&D", description: "Pivot chemistry to non-toxic alternatives.", priority: "High" }
         ]
       }
     },
 
     productConcept: {
-        imageUrl: "https://images.unsplash.com/photo-1508514177221-188b1cf2f24f?auto=format&fit=crop&q=80&w=2070",
-        prompt: "Modern skyscraper with transparent solar windows, sunset reflection, green energy city, futuristic architecture"
+      imageUrl: "https://images.unsplash.com/photo-1508514177221-188b1cf2f24f?auto=format&fit=crop&q=80&w=2070",
+      prompt: "Modern skyscraper with transparent solar windows, sunset reflection, green energy city, futuristic architecture"
     }
   }
 ];
