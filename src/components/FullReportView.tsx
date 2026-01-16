@@ -774,61 +774,37 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Left Column: Visual Map & Blocking Risks */}
+                {/* Left Column: Blocking Analysis & FTO (Expanded) */}
                 <div className="lg:col-span-8 space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Whitespace Map (Visual Only) */}
-                        <div className="bg-slate-900 rounded-2xl p-6 text-white relative overflow-hidden h-full min-h-[400px] flex flex-col">
-                            <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/30 rounded-full blur-[80px]"></div>
-                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 relative z-10 flex items-center gap-2">
-                                <i className="fa-solid fa-map"></i> IP Landscape Map
-                            </h3>
 
-                            {/* Simulated Map */}
-                            <div className="relative z-10 flex-1 border border-slate-700 bg-slate-800/50 rounded-xl relative overflow-hidden group">
-                                {/* Map Grid */}
-                                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-
-                                {/* Us (Center) */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.5)] z-20">
-                                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-emerald-400 whitespace-nowrap">Our Tech</div>
-                                </div>
-
-                                {/* Competitors / Blocking Risks */}
-                                {report.ipDeepDive.blockingPatents.map((p, i) => {
-                                    // Simple deterministic random position based on index
-                                    const top = 20 + (i * 15) % 60;
-                                    const left = 20 + (i * 25) % 60;
-                                    return (
-                                        <div key={i} className="absolute w-3 h-3 bg-red-500/80 rounded-full hover:scale-150 transition-transform cursor-pointer z-10" style={{ top: `${top}%`, left: `${left}%` }} title={p.patentNumber}>
-                                            <div className="absolute w-24 h-24 border border-red-500/20 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-                                        </div>
-                                    )
-                                })}
-
-                                {/* Whitespace Zones */}
-                                <div className="absolute bottom-10 right-10 w-20 h-20 bg-blue-500/10 rounded-full border border-blue-500/30 flex items-center justify-center">
-                                    <span className="text-[8px] text-blue-300 font-bold">Whitespace</span>
-                                </div>
+                    {/* Blocking Analysis - UPSCALED GRID */}
+                    <div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-8 h-8 rounded bg-red-100 text-red-600 flex items-center justify-center">
+                                <i className="fa-solid fa-shield-halved"></i>
                             </div>
+                            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Blocking Analysis</h3>
                         </div>
 
-                        {/* Blocking Risk Cards - UPDATED: ASSIGNEE FIRST */}
-                        <div className="space-y-4">
-                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                <i className="fa-solid fa-shield-halved"></i> Blocking Analysis
-                            </h3>
-                            {report.ipDeepDive.blockingPatents.slice(0, 3).map((p, i) => (
-                                <div key={i} className="bg-white p-5 rounded-xl border border-red-100 shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                                    <div className="flex justify-between items-start mb-1">
-                                        <h4 className="font-bold text-slate-900 text-sm group-hover:text-red-700 transition-colors uppercase tracking-tight">{p.holder}</h4>
-                                        <Badge color="red" size="xs">High Risk</Badge>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {report.ipDeepDive.blockingPatents.map((p, i) => (
+                                <div key={i} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
+                                    {/* Risk Indicator Strip */}
+                                    <div className={`absolute top-0 left-0 w-1 h-full ${p.ftoRisk === 'high' ? 'bg-red-500' : p.ftoRisk === 'medium' ? 'bg-amber-500' : 'bg-emerald-500'}`}></div>
+
+                                    <div className="flex justify-between items-start mb-2 pl-2">
+                                        <Badge color={p.ftoRisk === 'high' ? 'red' : p.ftoRisk === 'medium' ? 'amber' : 'emerald'} size="xs">{p.ftoRisk.toUpperCase()} RISK</Badge>
+                                        <span className="text-[10px] font-mono text-slate-400">EXP: {p.expiration}</span>
                                     </div>
-                                    <div className="mb-3">
+
+                                    <div className="pl-2 mb-3">
+                                        <h4 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors uppercase tracking-tight mb-1">{p.holder}</h4>
                                         <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">PATENT {p.patentNumber}</span>
                                     </div>
-                                    <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">{p.claimsCoverage}</p>
+
+                                    <p className="pl-2 text-[11px] text-slate-500 leading-relaxed line-clamp-3 bg-slate-50 p-2 rounded border border-slate-100">
+                                        "{p.relevance}"
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -861,7 +837,7 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                                 <tbody className="divide-y divide-slate-50">
                                     {report.ipDeepDive.ftoAssessment.components.map((c, i) => {
                                         // Caluclate mock probability based on risk level text
-                                        const riskLevel = c.riskLevel.toLowerCase();
+                                        const riskLevel = c.riskLevel ? c.riskLevel.toLowerCase() : 'low';
                                         const prob = riskLevel.includes('high') ? 85 : riskLevel.includes('medium') ? 45 : 15;
                                         const color = riskLevel.includes('high') ? 'red' : riskLevel.includes('medium') ? 'amber' : 'emerald';
 
@@ -869,7 +845,7 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                                             <tr key={i} className="hover:bg-slate-50/50 transition-colors">
                                                 <td className="p-4 pl-6 font-bold text-slate-900">{c.component}</td>
                                                 <td className="p-4">
-                                                    <Badge size="xs" color={color}>{c.riskLevel.toUpperCase()}</Badge>
+                                                    <Badge size="xs" color={color}>{riskLevel.toUpperCase()}</Badge>
                                                 </td>
                                                 <td className="p-4 w-40">
                                                     {/* Probability Bar */}
@@ -892,7 +868,7 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
 
                 {/* Right Column: IP Strategy & Roadmap */}
                 <div className="lg:col-span-4 space-y-8">
-                    {/* UPDATED: Roadmap - Step Wizard Style */}
+                    {/* Filing Strategy Steps (Existing Code) */}
                     <Card className="bg-slate-900 border-slate-800 text-white">
                         <div className="p-2">
                             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Filing Strategy Steps</h3>
@@ -915,7 +891,7 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                         </div>
                     </Card>
 
-                    {/* UPDATED: Defensive Moats - Visual Cards */}
+                    {/* Defensive Moats (Existing Code) */}
                     <div className="space-y-4">
                         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                             <i className="fa-solid fa-dungeon"></i> Defensive Moats
@@ -938,6 +914,92 @@ const FullReportView: React.FC<FullReportViewProps> = ({ report, onClose, onAskA
                             </div>
                         ))}
                     </div>
+                </div>
+            </div>
+
+            {/* Full Width IP Landscape Map - NEW RADAR VISUALIZATION */}
+            <div className="mt-12">
+                <div className="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                            <i className="fa-solid fa-map-location-dot"></i> IP Risk Radar
+                        </h3>
+                        <p className="text-xs text-slate-500 mt-1">Spatial visualization of patent landscape proximity</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-[10px] font-bold uppercase text-slate-400">
+                        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-red-500"></div> Direct Block</div>
+                        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-amber-500"></div> Close Art</div>
+                        <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Whitespace</div>
+                    </div>
+                </div>
+
+                <div className="w-full h-[500px] bg-slate-900 rounded-2xl relative overflow-hidden flex items-center justify-center border border-slate-800 shadow-2xl">
+                    {/* Radar Grid/Background */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-800/50 via-slate-900 to-slate-900"></div>
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+                    {/* Orbits */}
+                    <div className="absolute w-[80%] h-[80%] rounded-full border border-emerald-500/10 border-dashed animate-spin-slow-reverse"></div>
+                    <div className="absolute w-[55%] h-[55%] rounded-full border border-amber-500/10 border-dashed animate-spin-slow"></div>
+                    <div className="absolute w-[30%] h-[30%] rounded-full border border-red-500/10 border-dashed"></div>
+
+                    {/* Axis Lines */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                        <div className="w-full h-px bg-white"></div>
+                        <div className="h-full w-px bg-white absolute"></div>
+                    </div>
+
+                    {/* Center Node (US) */}
+                    <div className="absolute z-30 group cursor-default">
+                        <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(37,99,235,0.6)] border-4 border-blue-400/50 relative">
+                            <i className="fa-solid fa-bullseye text-white text-xl"></i>
+                            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-blue-900/80 px-3 py-1 rounded-full border border-blue-500/50 text-blue-200 text-[10px] font-bold uppercase">
+                                Our Innovation
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Plot Patents on Radar */}
+                    {report.ipDeepDive.blockingPatents.map((p, i) => {
+                        // Determine Distance based on Risk
+                        // High Risk = Close (15% - 25% from center)
+                        // Medium Risk = Mid (30% - 50%)
+                        // Low Risk = Far (60% - 85%)
+                        const risk = p.ftoRisk ? p.ftoRisk.toLowerCase() : 'medium';
+                        const baseDist = risk === 'high' ? 20 : risk === 'medium' ? 40 : 70;
+                        const randomVar = (i * 13) % 10; // Deterministic Variance
+                        const distance = baseDist + randomVar;
+
+                        // Determine Angle
+                        const angle = (i * 137.5) % 360; // Golden Angle for distribution
+                        const color = risk === 'high' ? 'bg-red-500' : risk === 'medium' ? 'bg-amber-500' : 'bg-emerald-500';
+                        const glow = risk === 'high' ? 'shadow-[0_0_15px_rgba(239,68,68,0.6)]' : risk === 'medium' ? 'shadow-[0_0_15px_rgba(245,158,11,0.5)]' : 'shadow-[0_0_15px_rgba(16,185,129,0.5)]';
+
+                        return (
+                            <div
+                                key={i}
+                                className="absolute top-1/2 left-1/2 w-0 h-0 z-20"
+                                style={{ transform: `rotate(${angle}deg)` }}
+                            >
+                                <div
+                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 group"
+                                    style={{ left: `${distance}%` }} // Simplified, assumes container is responsive enough. Actually % left works if we rotate parent container. 
+                                // RE-THINK: Rotating a 0x0 div is easiest way to place angularly.
+                                // wait, `left: distance%` on a rotated container moves it "out" along that angle? No, it moves it along X axis OF THE ROTATED CONTAINER. Yes.
+                                >
+                                    {/* Rotated back content to be upright? No, just dots for now, hover details can handle it */}
+                                    <div className={`w-4 h-4 ${color} rounded-full ${glow} border-2 border-slate-900 cursor-pointer hover:scale-150 transition-transform relative`} style={{ transform: `rotate(-${angle}deg)` }}>
+                                        {/* Tooltip Card */}
+                                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-48 bg-white text-slate-900 p-3 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left border border-slate-200">
+                                            <div className="text-[9px] font-bold text-slate-400 uppercase mb-1">{p.holder}</div>
+                                            <div className="text-xs font-bold leading-tight mb-2">Pat: {p.patentNumber}</div>
+                                            <Badge size="xs" color={risk === 'high' ? 'red' : risk === 'medium' ? 'amber' : 'emerald'}>{risk.toUpperCase()}</Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>
