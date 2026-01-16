@@ -253,13 +253,28 @@ const ReportWizard: React.FC<ReportWizardProps> = ({ onComplete, onCancel }) => 
         report = await gemini.generateAssessmentFromQuestionnaire(responses);
       }
       onComplete(report);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setProcessingLogs(prev => [...prev, "❌ Error: Analysis failed. Please check inputs."]);
+      const errorMessage = e?.message || "Analysis failed. Please check inputs.";
+      setProcessingLogs(prev => [...prev, `❌ Error: ${errorMessage}`]);
+
+      // Show detailed error message to user
       setTimeout(() => {
-        alert("Analysis failed. Please try again.");
+        if (errorMessage.includes('API key not found') || errorMessage.includes('VITE_GOOGLE_API_KEY')) {
+          alert(
+            "⚠️ Configuration Required\n\n" +
+            "Google API key is not configured. To fix this:\n\n" +
+            "1. Create a .env file in the project root\n" +
+            "2. Add: VITE_GOOGLE_API_KEY=your_api_key_here\n" +
+            "3. Get your API key from: https://aistudio.google.com/app/apikey\n" +
+            "4. Restart the development server\n\n" +
+            "Note: Environment variables are loaded at build time in Vite."
+          );
+        } else {
+          alert(`Analysis failed: ${errorMessage}\n\nPlease check the console for more details.`);
+        }
         setMode('select');
-      }, 2000);
+      }, 1000);
     }
   };
 

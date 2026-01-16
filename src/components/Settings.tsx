@@ -1,7 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { checkGoogleApiKey, getApiKeySetupInstructions } from '../utils/envCheck';
 
 const Settings: React.FC = () => {
+  const [apiKeyStatus, setApiKeyStatus] = useState(() => checkGoogleApiKey());
   const [notifications, setNotifications] = useState({
     email: true,
     browser: false,
@@ -40,12 +42,42 @@ const Settings: React.FC = () => {
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">System Health</h3>
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold text-slate-700">API Connection</span>
-                        <span className="flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Operational
-                        </span>
+                        <span className="text-sm font-bold text-slate-700">API Configuration</span>
+                        {apiKeyStatus.isConfigured ? (
+                            <span className="flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Configured
+                            </span>
+                        ) : (
+                            <span className="flex items-center gap-2 text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded border border-red-100">
+                                <i className="fa-solid fa-exclamation-triangle"></i>
+                                Not Configured
+                            </span>
+                        )}
                     </div>
+                    {apiKeyStatus.isConfigured && apiKeyStatus.apiKey && (
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm font-bold text-slate-700">API Key</span>
+                            <span className="text-xs font-mono text-slate-500">{apiKeyStatus.apiKey}</span>
+                        </div>
+                    )}
+                    {!apiKeyStatus.isConfigured && (
+                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                            <div className="flex items-start gap-2">
+                                <i className="fa-solid fa-info-circle text-amber-600 mt-0.5"></i>
+                                <div className="text-xs text-amber-900">
+                                    <p className="font-bold mb-1">Setup Required</p>
+                                    <p className="text-amber-800 mb-2">{apiKeyStatus.error}</p>
+                                    <button
+                                        onClick={() => alert(getApiKeySetupInstructions())}
+                                        className="text-amber-700 hover:text-amber-900 font-bold underline"
+                                    >
+                                        View Setup Instructions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="flex justify-between items-center">
                         <span className="text-sm font-bold text-slate-700">Model Latency</span>
                         <span className="text-xs font-mono text-slate-500">142ms</span>
