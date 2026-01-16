@@ -70,12 +70,16 @@
 |---------|-------------|
 | **Multi-Agent AI Analysis** | 6 specialized AI agents (Technologist, Patent Attorney, Market Strategist, Regulatory Consultant, Commercial Lead, Synthesis Director) work in parallel |
 | **Sector-Weighted Scoring** | Deterministic risk scoring with industry-specific weighting for 8 sectors |
+| **IP Risk Radar Visualization** | Spatial radar showing patent landscape with animated concentric orbits, FTO risk plotting, and "Clean IP Landscape" messaging |
+| **Executive Verdict Box** | Strategic recommendation framework with condition gating, investment requirements, and risk gauge visualization |
 | **Interactive Dashboard** | Real-time portfolio KPIs, risk distribution charts, and activity monitoring |
 | **AI Chat Assistant** | Context-aware analyst for follow-up questions with Google Search integration |
 | **Product Visualizer** | AI-powered concept image generation using Gemini's vision models |
-| **Print-Ready Reports** | Professional HTML/PDF export with investor-grade formatting |
-| **Technology Readiness Levels** | TRL 1-9 assessment with subsystem-level granularity |
-| **IP Deep Dive** | Patent landscape analysis, FTO assessment, and filing strategy recommendations |
+| **Print-Ready Reports** | Professional HTML/PDF export with investor-grade formatting and Dr. Arcus A.I. digital signature |
+| **Technology Readiness Levels** | TRL 1-9 assessment with subsystem-level granularity and animated timeline visualization |
+| **IP Deep Dive** | Patent landscape analysis, FTO assessment, filing strategy recommendations, and blocking patent detection |
+| **Market Sizing (TAM/SAM/SOM)** | Three-tier market analysis with Total Addressable, Serviceable Available, and Serviceable Obtainable Markets |
+| **Decision Logic Tree** | Visual Go/No-Go framework with conditional branching and strategic pathway analysis |
 
 ---
 
@@ -140,6 +144,25 @@
 | `jspdf` | 2.5.1 | PDF generation |
 | `typescript` | ~5.8.2 | Static type checking |
 | `vite` | ^6.2.0 | Build tool & dev server |
+
+### Typography & Fonts
+
+The platform uses a carefully curated font stack for professional presentation:
+
+| Font Family | Usage | Source |
+|-------------|-------|--------|
+| **Playfair Display** | Display headers, report cover titles, section headings | Google Fonts |
+| **Dancing Script** | Dr. Arcus A.I. signature (Director's Insights) | Google Fonts |
+| **Inter** | Primary body text, UI elements | Google Fonts |
+| **Plus Jakarta Sans** | Alternative sans-serif, dashboard elements | Google Fonts |
+| **JetBrains Mono** | Technical details, report IDs, code snippets | Google Fonts |
+| **Font Awesome** | Icons throughout the interface | CDN (6.4.0) |
+
+**Design Notes:**
+- Serif (Playfair Display) provides gravitas for investor-facing content
+- Dancing Script adds personalized touch to AI director signature
+- Inter ensures excellent readability at all sizes
+- JetBrains Mono maintains clarity for technical specifications
 
 ---
 
@@ -380,7 +403,7 @@ npm run dev
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `VITE_GOOGLE_API_KEY` | Yes | Your Google Gemini API key (get it from https://aistudio.google.com/app/apikey) |
+| `VITE_GOOGLE_API_KEY` | Yes | Your Google Gemini API key - VITE_ prefix required for client-side access. Get it from https://aistudio.google.com/app/apikey |
 
 ---
 
@@ -480,18 +503,19 @@ Once submitted, the platform orchestrates 6 parallel AI agents:
 
 ### Step 3: Reviewing the Report
 
-The generated report contains 8 major sections:
+The generated report contains 9 major sections with advanced visualizations:
 
 | Section | Content |
 |---------|---------|
-| **Executive Summary** | Risk profile, critical concerns, key strengths, commercialization path |
-| **Technology Forensics** | Technical deep-dive, claims matrix, TRL assessment, validation gaps |
-| **IP Deep Dive** | Patent search, blocking patents, FTO assessment, filing strategy |
-| **Market Dynamics** | TAM/SAM, competitive landscape, graveyard analysis, beachhead market |
-| **Regulatory Pathway** | Classification, comparable systems, timeline/cost, risks |
-| **Financial Roadmap** | Action plan, budget, unit economics, funding requirements |
-| **Strategic Recommendations** | Go/No-Go framework, partnerships, monitoring metrics |
-| **Product Concept** | AI-generated visualization (optional) |
+| **Executive Summary** | Risk profile with composite gauge, **Executive Verdict Box** (recommendation/condition/investment), critical concerns, validated strengths, commercialization path, algorithmic score validation |
+| **Technology Forensics** | Interactive system architecture schematic, technical deep-dive, claims matrix with evidence tiers, TRL 1-9 animated timeline, subsystems breakdown, validation gaps |
+| **IP Deep Dive** | **IP Risk Radar** (spatial orbit visualization), blocking patents grid, FTO clearance status with litigation bars, filing strategy phases, defensive moats, **"Clean IP Landscape"** messaging |
+| **Market Dynamics** | Market sizing (TAM/SAM/**SOM**), **Feature Comparison Matrix** (War Room), The Graveyard (failed products), zombie competitors, competitive landscape grid, beachhead market, acquisition milestones |
+| **Regulatory Pathway** | Classification cards, regulatory raceway timeline, **Predicate Match Scorecard**, applicable standards (IEC/ISO), timeline estimates, risk analysis |
+| **Financial Roadmap** | Unit economics waterfall, cost of goods donut chart, capital requirements (Seed/Series A), deployment timeline, BOM breakdown, gross margin analysis |
+| **Strategic Outlook** | Strategic execution plan timeline, **Decision Logic Tree** (Go/No-Go), strategic partnerships with dynamic logos, alternative pathways, monitoring metrics |
+| **Director's Insights** | **Dr. Arcus A.I. digital signature** (animated SVG), official memorandum, director's synthesis, strategic mandates with priority badges |
+| **Visual Appendix** | AI-generated product concept (optional), rendering context, design language display |
 
 ### Step 4: Using the AI Analyst
 
@@ -533,7 +557,15 @@ After generating a report, use the AI Analyst chat to:
 │  │                                                                          │
 │  ├── FullReportView.tsx (Modal)                                             │
 │  │   ├── Cover Section                                                      │
-│  │   ├── 8 Report Sections                                                  │
+│  │   ├── Executive Summary (Verdict Box, Risk Gauge)                        │
+│  │   ├── Technology Forensics (Architecture, TRL Timeline)                  │
+│  │   ├── IP Deep Dive (Risk Radar, Blocking Patents)                        │
+│  │   ├── Market Dynamics (TAM/SAM/SOM, War Room)                            │
+│  │   ├── Regulatory Pathway (Raceway, Predicates)                           │
+│  │   ├── Financial Roadmap (Waterfall, Donut Charts)                        │
+│  │   ├── Strategic Outlook (Decision Tree, Partnerships)                    │
+│  │   ├── Director's Insights (Dr. Arcus Signature)                          │
+│  │   ├── Visual Appendix (Product Concept)                                  │
 │  │   └── Export Button                                                      │
 │  │                                                                          │
 │  ├── AssistantChat.tsx                                                      │
@@ -737,6 +769,10 @@ interface ExecutiveSummary {
     tier3Count: number;          // Minor issues
     summaryParagraph: string;
     scoringBreakdown?: ScoringBreakdown;
+    // Executive Verdict Box fields (PDF export)
+    recommendation?: string;     // e.g., "CONDITIONAL PROCEED"
+    keyCondition?: string;       // e.g., "Pending Sensor POC"
+    investmentRequired?: string; // e.g., "$18-22M"
   };
   criticalConcerns: CriticalConcern[];
   keyStrengths: KeyStrength[];
@@ -765,10 +801,16 @@ interface IpDeepDive {
   searchMethodology: PatentSearch;
   classificationCodes: CPCCode[];
   whitespace: WhitespaceAnalysis;
-  blockingPatents: BlockingPatent[];
+  blockingPatents: BlockingPatent[];  // Powers IP Risk Radar visualization
   ftoAssessment: FTOAssessment;
   filingStrategy: FilingPhase[];
 }
+
+// Special Features:
+// - IP Risk Radar: Spatial visualization with animated orbits
+// - Patents plotted by FTO risk (red=high, amber=medium, green=low)
+// - "Clean IP Landscape" message when blockingPatents.length === 0
+// - Interactive tooltips with patent details
 ```
 
 ---
@@ -855,7 +897,7 @@ const newSectionResult = await model.generateContent({
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| "API key not valid" or "Google API key not found" | Missing or invalid `VITE_GOOGLE_API_KEY` | Create `.env` file with your API key |
+| "API key not valid" or "Google API key not found" | Missing or invalid `VITE_GOOGLE_API_KEY` | Create `.env` file with `VITE_GOOGLE_API_KEY=your_key` (VITE_ prefix required) |
 | HTTP 429 errors | Rate limiting | Wait and retry with backoff |
 | Empty report sections | API timeout | Increase timeout, check network |
 | "Module not found" | Missing dependencies | Run `npm install` |
@@ -874,6 +916,54 @@ Access the Settings panel to view:
 - API connection status
 - Model availability
 - Response latency
+
+---
+
+## Visual Features & Branding
+
+### Advanced Visualizations
+
+The platform includes sophisticated visual components designed for investor-grade presentations:
+
+| Visualization | Section | Description |
+|--------------|---------|-------------|
+| **IP Risk Radar** | IP Deep Dive | Spatial radar with animated concentric orbits, patents plotted by FTO risk with color coding |
+| **Composite Risk Gauge** | Executive Summary | Circular progress gauge with color-coded risk levels (emerald/amber/red) |
+| **TRL Timeline** | Technology Forensics | Animated progression timeline showing TRL 1-9 with current stage highlighting |
+| **Unit Economics Waterfall** | Financial Roadmap | Flow visualization showing ASP → COGS → Margin breakdown |
+| **Decision Logic Tree** | Strategic Outlook | Branching Go/No-Go framework with conditional pathways |
+| **Regulatory Raceway** | Regulatory Pathway | Timeline visualization of submission phases with cost estimates |
+| **Feature War Room** | Market Dynamics | Competitive benchmarking matrix with color-coded comparisons |
+| **Cost of Goods Donut** | Financial Roadmap | Proportional breakdown of COGS components |
+
+### Branding Elements
+
+**Dr. Arcus A.I. Signature**
+- Animated SVG signature with 3-second stroke-dash animation
+- Dancing Script font (Google Fonts)
+- Appears in Director's Insights section
+- Title: "Senior Director, TTO"
+- Professional memorandum format (TO/FROM/RE)
+
+**Executive Verdict Box** (PDF Export)
+- Three-column layout: Risk Gauge | Recommendation | Investment
+- Strategic recommendation display (e.g., "CONDITIONAL PROCEED")
+- Key condition gating (e.g., "Pending Sensor POC")
+- Investment requirement (e.g., "$18-22M")
+- Professional formatting for investor distribution
+
+### Market Sizing Enhancement
+
+**Three-Tier Market Analysis:**
+```
+TAM (Total Addressable Market)
+  ↓
+SAM (Serviceable Available Market)
+  ↓
+SOM (Serviceable Obtainable Market) ← NEW
+```
+
+The SOM represents the realistic market capture potential within 3-5 years, providing investors with actionable go-to-market expectations.
 
 ---
 
