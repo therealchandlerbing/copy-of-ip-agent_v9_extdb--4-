@@ -13,7 +13,10 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
       // 1. Bold: **text** -> <strong>text</strong>
       valStr = valStr.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-      // 2. Lists: * item -> <li>item</li>
+      // 2. Blockquotes / Callouts: > text
+      valStr = valStr.replace(/^> (.*$)/gm, '<blockquote style="border-left: 4px solid #3b82f6; background-color: #f8fafc; padding: 10px; margin: 10px 0; font-style: italic; color: #475569;">$1</blockquote>');
+
+      // 3. Lists: * item -> <li>item</li>
       // Check if there are any list items
       if (valStr.includes('\n* ') || valStr.includes('\n- ') || valStr.startsWith('* ') || valStr.startsWith('- ')) {
         const lines = valStr.split('\n');
@@ -33,8 +36,12 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
               newList.push('</ul>');
               inList = false;
             }
-            // Wrap paragraph text if it's not empty/header
-            if (trimmed.length > 0 && !trimmed.startsWith('#')) {
+            // Check for blockquotes already processed (they start with <blockquote)
+            if (line.startsWith('<blockquote')) {
+              newList.push(line);
+            }
+            // Wrap paragraph text if it's not empty/header and not already HTML tag
+            else if (trimmed.length > 0 && !trimmed.startsWith('#') && !trimmed.startsWith('<')) {
               newList.push(`<p>${line}</p>`);
             } else {
               newList.push(line);
@@ -44,8 +51,11 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
         if (inList) newList.push('</ul>');
         valStr = newList.join('\n');
       } else {
-        // Just paragraphs
-        valStr = valStr.split('\n\n').map(p => `<p>${p}</p>`).join('');
+        // Just paragraphs, but respect existing HTML tags like blockquotes
+        valStr = valStr.split('\n\n').map(p => {
+          if (p.trim().startsWith('<')) return p; // Don't wrap HTML
+          return `<p>${p}</p>`;
+        }).join('');
       }
     }
 
@@ -61,11 +71,65 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
   replace('REPORT_DATE', report.cover.reportDate);
   replace('REPORT_ID', report.cover.reportId);
 
+  // --- SVG GENERATORS (New for High Fidelity Print) ---
+
+  const generateRiskGauge = (score: number, color: string) => {
+    // Simple SVG gauge
+    const radius = 50;
+    const stroke = 10;
+    const normalizedRadius = radius - stroke * 2;
+    const circumference = normalizedRadius * 2 * Math.PI;
+    const strokeDashoffset = circumference - (score / 100) * circumference;
+
+    return `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle stroke="#e2e8f0" stroke-width="${stroke}" fill="transparent" r="${normalizedRadius}" cx="60" cy="60" />
+        <circle stroke="${color}" stroke-width="${stroke}" stroke-dasharray="${circumference} ${circumference}" style="stroke-dashoffset: ${strokeDashoffset}; transform-origin: 60px 60px; transform: rotate(-90deg);" stroke-linecap="round" fill="transparent" r="${normalizedRadius}" cx="60" cy="60" />
+        <text x="60" y="65" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#0f172a">${score}</text>
+        <text x="60" y="80" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="8" fill="#64748b">INDEX</text>
+      </svg>
+    `;
+  };
+
+  const generateTechSchematic = () => {
+    // Abstract "Node Graph" for visual flair
+    return `
+       <svg width="600" height="200" viewBox="0 0 600 200">
+           <defs>
+               <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                   <feGaussianBlur stdDeviation="3" result="blur" />
+                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
+               </filter>
+           </defs>
+           <!-- Connections -->
+           <path d="M100,100 L250,100" stroke="#334155" stroke-width="2" />
+           <path d="M350,100 L500,100" stroke="#334155" stroke-width="2" />
+           <path d="M300,50 L300,150" stroke="#334155" stroke-width="2" />
+           
+           <!-- Nodes -->
+           <rect x="250" y="50" width="100" height="100" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2" filter="url(#glow)" />
+           <circle cx="100" cy="100" r="30" fill="#0f172a" stroke="#10b981" stroke-width="2" />
+           <circle cx="500" cy="100" r="30" fill="#0f172a" stroke="#fbbf24" stroke-width="2" />
+           
+           <!-- Labels -->
+           <text x="300" y="105" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="12">CORE LOGIC</text>
+           <text x="100" y="105" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="10">INPUT</text>
+           <text x="500" y="105" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="10">OUTPUT</text>
+       </svg>
+     `;
+  };
+
   // --- 2. EXECUTIVE SUMMARY ---
   const riskScore = report.executiveSummary.riskProfile.aggregateScore;
   let riskColor = '#10b981'; // green
   if (riskScore >= 60) riskColor = '#ef4444'; // red
   else if (riskScore >= 40) riskColor = '#f97316'; // orange/amber
+
+  // Inject SVG
+  replace('RISK_GAUGE_SVG', generateRiskGauge(riskScore, riskColor));
+
+  // Inject Tech Schematic SVG
+  replace('TECH_SCHEMATIC_SVG', generateTechSchematic());
 
   replace('RISK_COLOR', riskColor);
   replace('RISK_SCORE', riskScore);
