@@ -33,7 +33,7 @@ export const REPORT_TEMPLATE = `
             /* Borders */
             --border-light: #e2e8f0;
             --border-med: #cbd5e1;
-
+            
             /* Typography */
             --font-display: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
@@ -142,7 +142,7 @@ export const REPORT_TEMPLATE = `
 </head>
 <body>
 
-    <!-- COVER PAGE -->
+    <!-- COVER PAGE (Page 1) -->
     <div class="page page-cover">
         <div class="cover-content">
             <div class="cover-accent-bar"></div>
@@ -163,7 +163,7 @@ export const REPORT_TEMPLATE = `
         </div>
     </div>
 
-    <!-- TOC -->
+    <!-- TOC (Page 2) -->
     <div class="page">
         <div class="header">
             <div>
@@ -176,19 +176,19 @@ export const REPORT_TEMPLATE = `
             <div style="max-width: 150mm; margin-left: 10mm;">
                 <div class="toc-item"><span class="toc-num">01</span><span class="toc-name">Executive Summary</span><span class="toc-page">03</span></div>
                 <div class="toc-item"><span class="toc-num">02</span><span class="toc-name">Technology Forensics</span><span class="toc-page">08</span></div>
-                <div class="toc-item"><span class="toc-num">03</span><span class="toc-name">IP Deep Dive</span><span class="toc-page">14</span></div>
-                <div class="toc-item"><span class="toc-num">04</span><span class="toc-name">Market Dynamics</span><span class="toc-page">20</span></div>
-                <div class="toc-item"><span class="toc-num">05</span><span class="toc-name">Regulatory & Compliance</span><span class="toc-page">27</span></div>
-                <div class="toc-item"><span class="toc-num">06</span><span class="toc-name">Financial Roadmap</span><span class="toc-page">30</span></div>
-                <div class="toc-item"><span class="toc-num">07</span><span class="toc-name">Strategic Outlook</span><span class="toc-page">34</span></div>
-                <div class="toc-item"><span class="toc-num">08</span><span class="toc-name">Director's Insights</span><span class="toc-page">37</span></div>
-                <div class="toc-item"><span class="toc-num">09</span><span class="toc-name">Appendix</span><span class="toc-page">40</span></div>
+                <div class="toc-item"><span class="toc-num">03</span><span class="toc-name">IP Deep Dive</span><span class="toc-page">15</span></div>
+                <div class="toc-item"><span class="toc-num">04</span><span class="toc-name">Market Dynamics</span><span class="toc-page">21</span></div>
+                <div class="toc-item"><span class="toc-num">05</span><span class="toc-name">Regulatory & Compliance</span><span class="toc-page">28</span></div>
+                <div class="toc-item"><span class="toc-num">06</span><span class="toc-name">Financial Roadmap</span><span class="toc-page">31</span></div>
+                <div class="toc-item"><span class="toc-num">07</span><span class="toc-name">Strategic Outlook</span><span class="toc-page">35</span></div>
+                <div class="toc-item"><span class="toc-num">08</span><span class="toc-name">Director's Insights</span><span class="toc-page">38</span></div>
+                <div class="toc-item"><span class="toc-num">09</span><span class="toc-name">Appendix</span><span class="toc-page">41</span></div>
             </div>
         </div>
         <div class="footer"><span>Confidential Assessment</span><span>Page 02</span></div>
     </div>
 
-    <!-- SECTION 01 -->
+    <!-- SECTION 01 (Page 3) -->
     <div class="page page-section">
         <div class="section-watermark">01</div>
         <div class="section-content">
@@ -198,7 +198,7 @@ export const REPORT_TEMPLATE = `
         </div>
     </div>
 
-    <!-- 1.1 RISK PROFILE (SVG INJECTED) -->
+    <!-- 1.1 RISK PROFILE (Page 4) -->
     <div class="page">
         <div class="header">
             <h3>Executive Summary</h3>
@@ -232,7 +232,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 04</span></div>
     </div>
 
-    <!-- 1.2 RED FLAGS -->
+    <!-- 1.2 RED FLAGS (Page 5) -->
     <div class="page">
         <div class="header"><div>Executive Summary</div><div>1.2 Red Flags</div></div>
         <div class="content">
@@ -243,7 +243,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 05</span></div>
     </div>
 
-    <!-- 1.3 STRENGTHS -->
+    <!-- 1.3 STRENGTHS (Page 6) -->
     <div class="page">
         <div class="header"><div>Executive Summary</div><div>1.3 Key Strengths</div></div>
         <div class="content">
@@ -254,7 +254,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 06</span></div>
     </div>
 
-    <!-- 1.4 COMMERCIALIZATION -->
+    <!-- 1.4 COMMERCIALIZATION (Page 7) -->
     <div class="page">
         <div class="header"><div>Executive Summary</div><div>1.4 Commercialization Path</div></div>
         <div class="content">
@@ -276,7 +276,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 07</span></div>
     </div>
 
-    <!-- SECTION 02 -->
+    <!-- SECTION 02 (Page 8) -->
     <div class="page page-section">
         <div class="section-watermark">02</div>
         <div class="section-content">
@@ -286,7 +286,7 @@ export const REPORT_TEMPLATE = `
         </div>
     </div>
 
-    <!-- 2.1 OVERVIEW & SCHEMATIC -->
+    <!-- 2.1 OVERVIEW & SCHEMATIC (Page 9) -->
     <div class="page">
         <div class="header">
             <h3>Tech Forensics</h3>
@@ -321,7 +321,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 09</span></div>
     </div>
 
-    <!-- 2.2 CORE TECHNOLOGY -->
+    <!-- 2.2 CORE TECHNOLOGY (Page 10) -->
     <div class="page">
         <div class="header"><div>Tech Forensics</div><div>2.2 Core Tech</div></div>
         <div class="content">
@@ -337,7 +337,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 10</span></div>
     </div>
 
-    <!-- 2.3 CLAIMS MATRIX -->
+    <!-- 2.3 CLAIMS MATRIX (Page 11) -->
     <div class="page">
         <div class="header"><div>Tech Forensics</div><div>2.3 Claims Validation</div></div>
         <div class="content">
@@ -351,7 +351,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 11</span></div>
     </div>
 
-    <!-- 2.4 RISKS -->
+    <!-- 2.4 RISKS (Page 12) -->
     <div class="page">
         <div class="header"><div>Tech Forensics</div><div>2.4 Physics of Failure</div></div>
         <div class="content">
@@ -363,7 +363,7 @@ export const REPORT_TEMPLATE = `
         <div class="footer"><span>Confidential</span><span>Page 12</span></div>
     </div>
 
-    <!-- 2.5 TRL -->
+    <!-- 2.5a TRL (Page 13) -->
     <div class="page">
         <div class="header"><div>Tech Forensics</div><div>2.5 Readiness Level</div></div>
         <div class="content">
@@ -383,17 +383,25 @@ export const REPORT_TEMPLATE = `
                 <thead><tr><th>Subsystem</th><th>TRL</th><th>Status</th></tr></thead>
                 <tbody>{{TRL_ROWS}}</tbody>
             </table>
+        </div>
+        <div class="footer"><span>Confidential</span><span>Page 13</span></div>
+    </div>
 
-            <h2 style="margin-top:10mm;">Validation Gaps</h2>
+    <!-- 2.5b VALIDATION GAPS (Page 14) -->
+    <div class="page">
+        <div class="header"><div>Tech Forensics</div><div>2.5 Readiness Level (Cont.)</div></div>
+        <div class="content">
+            <h2>Validation Gaps</h2>
+            <p style="margin-bottom: 6mm;">Critical testing required to advance TRL.</p>
             <table>
                 <thead><tr><th>Gap</th><th>Required Test</th><th>Cost & Timeline</th></tr></thead>
                 <tbody>{{VALIDATION_ROWS}}</tbody>
             </table>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 13</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 14</span></div>
     </div>
 
-    <!-- SECTION 03 (IP) -->
+    <!-- SECTION 03 (Page 15) -->
     <div class="page page-section">
         <div class="section-watermark">03</div>
         <div class="section-content">
@@ -403,7 +411,7 @@ export const REPORT_TEMPLATE = `
         </div>
     </div>
 
-    <!-- 3.1 METHODOLOGY -->
+    <!-- 3.1 METHODOLOGY (Page 16) -->
     <div class="page">
         <div class="header"><div>IP Deep Dive</div><div>3.1 Search Strategy</div></div>
         <div class="content">
@@ -421,10 +429,10 @@ export const REPORT_TEMPLATE = `
                 <tbody>{{IP_CLASS_ROWS}}</tbody>
             </table>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 15</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 16</span></div>
     </div>
 
-    <!-- 3.2 WHITESPACE -->
+    <!-- 3.2 WHITESPACE (Page 17) -->
     <div class="page">
         <div class="header"><div>IP Deep Dive</div><div>3.2 Whitespace</div></div>
         <div class="content">
@@ -440,10 +448,10 @@ export const REPORT_TEMPLATE = `
                 </div>
             </div>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 16</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 17</span></div>
     </div>
 
-    <!-- 3.3 BLOCKING (Page 1) -->
+    <!-- 3.3 BLOCKING (Page 18) -->
     <div class="page">
         <div class="header"><div>IP Deep Dive</div><div>3.3 Blocking Patents</div></div>
         <div class="content">
@@ -451,20 +459,20 @@ export const REPORT_TEMPLATE = `
             <p style="margin-bottom:8mm;">High-priority patents identified as potential blocking art.</p>
             {{BLOCKING_PATENTS_PAGE_1}}
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 17</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 18</span></div>
     </div>
 
-    <!-- 3.3 BLOCKING (Page 2) -->
+    <!-- 3.3 BLOCKING (Page 19) -->
     <div class="page">
         <div class="header"><div>IP Deep Dive</div><div>3.3 Blocking Patents (Cont.)</div></div>
         <div class="content">
             <h2 style="color:var(--color-risk-critical);">Freedom-to-Operate Risks</h2>
             {{BLOCKING_PATENTS_PAGE_2}}
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 18</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 19</span></div>
     </div>
 
-    <!-- 3.4 FTO & STRATEGY -->
+    <!-- 3.4 FTO & STRATEGY (Page 20) -->
     <div class="page">
         <div class="header"><div>IP Deep Dive</div><div>3.4 Strategy</div></div>
         <div class="content">
@@ -480,10 +488,10 @@ export const REPORT_TEMPLATE = `
                {{FILING_PHASES}}
            </div>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 19</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 20</span></div>
     </div>
 
-    <!-- SECTION 04 (MARKET) -->
+    <!-- SECTION 04 (Page 21) -->
     <div class="page page-section">
         <div class="section-watermark">04</div>
         <div class="section-content">
@@ -493,7 +501,7 @@ export const REPORT_TEMPLATE = `
         </div>
     </div>
 
-    <!-- 4.1 SIZING -->
+    <!-- 4.1 Market Sizing (Page 22) -->
     <div class="page">
         <div class="header"><div>Market Dynamics</div><div>4.1 Market Sizing</div></div>
         <div class="content">
@@ -511,6 +519,20 @@ export const REPORT_TEMPLATE = `
                 </div>
             </div>
             
+            <div style="margin-top:8mm; padding:5mm; background:var(--bg-subtle); border-radius:4px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <div><span class="stat-lbl">CAGR</span><br/><strong>{{CAGR}}</strong></div>
+                    <div><span class="stat-lbl">Forecast Period</span><br/><strong>{{FORECAST}}</strong></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer"><span>Confidential</span><span>Page 22</span></div>
+    </div>
+
+    <!-- 4.2 Market Trends (Page 23) -->
+    <div class="page">
+        <div class="header"><div>Market Dynamics</div><div>4.2 Trends & Drivers</div></div>
+        <div class="content">
             <div class="grid-2">
                 <div>
                      <h3>Key Drivers</h3>
@@ -521,51 +543,44 @@ export const REPORT_TEMPLATE = `
                      <ul class="clean-list">{{TRENDS_LIST}}</ul>
                 </div>
             </div>
-            
-            <div style="margin-top:8mm; padding:5mm; background:var(--bg-subtle); border-radius:4px;">
-                <div style="display:flex; justify-content:space-between;">
-                    <div><span class="stat-lbl">CAGR</span><br/><strong>{{CAGR}}</strong></div>
-                    <div><span class="stat-lbl">Forecast Period</span><br/><strong>{{FORECAST}}</strong></div>
-                </div>
-            </div>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 21</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 23</span></div>
     </div>
 
-    <!-- 4.2 GRAVEYARD -->
+    <!-- 4.3 Graveyard (Page 24) -->
     <div class="page">
-        <div class="header"><div>Market Dynamics</div><div>4.2 The Graveyard</div></div>
+        <div class="header"><div>Market Dynamics</div><div>4.3 The Graveyard</div></div>
         <div class="content">
             <h2 style="color:var(--color-risk-med);">Failures & Lessons</h2>
             <div class="markdown-content" style="margin-bottom:6mm;">{{GRAVEYARD_INTRO}}</div>
             {{GRAVEYARD_BLOCK}}
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 22</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 24</span></div>
     </div>
 
-    <!-- 4.3 COMPETITION (Page 1) -->
+    <!-- 4.4 Competition P1 (Page 25) -->
     <div class="page">
-        <div class="header"><div>Market Dynamics</div><div>4.3 Competitive Landscape</div></div>
+        <div class="header"><div>Market Dynamics</div><div>4.4 Competitive Landscape</div></div>
         <div class="content">
             <h2>Incumbents & Challengers</h2>
             {{COMPETITOR_DETAILED_PAGE_1}}
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 23</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 25</span></div>
     </div>
 
-    <!-- 4.3 COMPETITION (Page 2) -->
+    <!-- 4.4 Competition P2 (Page 26) -->
     <div class="page">
-        <div class="header"><div>Market Dynamics</div><div>4.3 Competitive Landscape</div></div>
+        <div class="header"><div>Market Dynamics</div><div>4.4 Competitive Landscape</div></div>
         <div class="content">
              <h2>Incumbents & Challengers (Cont.)</h2>
              {{COMPETITOR_DETAILED_PAGE_2}}
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 24</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 26</span></div>
     </div>
 
-    <!-- 4.4 COMPARISON -->
+    <!-- 4.5 Comparison (Page 27) -->
     <div class="page">
-        <div class="header"><div>Market Dynamics</div><div>4.4 Feature War Room</div></div>
+        <div class="header"><div>Market Dynamics</div><div>4.5 Feature War Room</div></div>
         <div class="content">
             <h2>Feature Comparison</h2>
             <table>
@@ -591,10 +606,10 @@ export const REPORT_TEMPLATE = `
                 <tbody>{{ACQUISITION_ROWS}}</tbody>
             </table>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 25</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 27</span></div>
     </div>
     
-    <!-- SECTION 05 (REGULATORY) -->
+    <!-- SECTION 05 (Page 28) -->
     <div class="page page-section">
          <div class="section-watermark">05</div>
          <div class="section-content">
@@ -604,7 +619,7 @@ export const REPORT_TEMPLATE = `
          </div>
      </div>
 
-     <!-- 5.1 CLASSIFICATION -->
+     <!-- 5.1 CLASSIFICATION (Page 29) -->
      <div class="page">
          <div class="header"><div>Regulatory</div><div>5.1 Pathway</div></div>
          <div class="content">
@@ -627,17 +642,25 @@ export const REPORT_TEMPLATE = `
                  <thead><tr><th>Device / System</th><th>Ref #</th><th>Relevance</th></tr></thead>
                  <tbody>{{PRECEDENT_ROWS}}</tbody>
              </table>
-             
-             <h3>Timeline & Cost</h3>
+         </div>
+         <div class="footer"><span>Confidential</span><span>Page 29</span></div>
+     </div>
+
+     <!-- 5.2 Timeline & Cost (Page 30) -->
+     <div class="page">
+         <div class="header"><div>Regulatory</div><div>5.2 Timeline & Resource</div></div>
+         <div class="content">
+             <h2>Timeline & Cost</h2>
+             <p style="margin-bottom: 6mm;">Estimated regulatory burden to approval.</p>
              <table>
                  <thead><tr><th>Phase</th><th>Activity</th><th>Duration</th><th>Est. Cost</th></tr></thead>
                  <tbody>{{REG_COST_ROWS}}</tbody>
              </table>
          </div>
-         <div class="footer"><span>Confidential</span><span>Page 28</span></div>
+         <div class="footer"><span>Confidential</span><span>Page 30</span></div>
      </div>
 
-     <!-- SECTION 06 (FINANCIAL) -->
+     <!-- SECTION 06 (Page 31) -->
      <div class="page page-section">
           <div class="section-watermark">06</div>
           <div class="section-content">
@@ -647,7 +670,7 @@ export const REPORT_TEMPLATE = `
           </div>
       </div>
 
-    <!-- 6.1 UNIT ECONOMICS -->
+    <!-- 6.1 UNIT ECONOMICS (Page 32) -->
     <div class="page">
         <div class="header"><div>Financial</div><div>6.1 Unit Economics</div></div>
         <div class="content">
@@ -672,8 +695,15 @@ export const REPORT_TEMPLATE = `
                 <thead><tr><th>Component Group</th><th>Est. Cost</th><th>Potential Supplier</th></tr></thead>
                 <tbody>{{BOM_ROWS}}</tbody>
             </table>
-            
-            <h2 style="margin-top:8mm;">Funding Requirements</h2>
+        </div>
+        <div class="footer"><span>Confidential</span><span>Page 32</span></div>
+    </div>
+    
+    <!-- 6.2 Funding Strategy (Page 33) -->
+    <div class="page">
+        <div class="header"><div>Financial</div><div>6.2 Capital Requirements</div></div>
+        <div class="content">
+            <h2>Funding Strategy</h2>
             <div class="grid-2">
                 <div class="card">
                     <h3 style="margin:0; border:none; color:var(--color-secondary);">Seed Round</h3>
@@ -687,12 +717,12 @@ export const REPORT_TEMPLATE = `
                 </div>
             </div>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 31</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 33</span></div>
     </div>
-    
-    <!-- 6.2 ROADMAP -->
+
+    <!-- 6.3 ROADMAP (Page 34) -->
     <div class="page">
-        <div class="header"><div>Financial</div><div>6.2 18-Month Plan</div></div>
+        <div class="header"><div>Financial</div><div>6.3 18-Month Plan</div></div>
         <div class="content">
             <h2>Action Plan</h2>
             <table>
@@ -700,10 +730,10 @@ export const REPORT_TEMPLATE = `
                 <tbody>{{ACTION_PLAN_ROWS}}</tbody>
             </table>
         </div>
-        <div class="footer"><span>Confidential</span><span>Page 32</span></div>
+        <div class="footer"><span>Confidential</span><span>Page 34</span></div>
     </div>
 
-    <!-- SECTION 07 (STRATEGY) -->
+    <!-- SECTION 07 (Page 35) -->
     <div class="page page-section">
          <div class="section-watermark">07</div>
          <div class="section-content">
@@ -713,6 +743,7 @@ export const REPORT_TEMPLATE = `
          </div>
      </div>
      
+     <!-- 7.1 Priorities (Page 36) -->
      <div class="page">
          <div class="header"><div>Strategy</div><div>7.1 Priorities</div></div>
          <div class="content">
@@ -721,8 +752,15 @@ export const REPORT_TEMPLATE = `
                  <thead><tr><th>Action</th><th>Owner</th><th>Timeline</th><th>Budget</th></tr></thead>
                  <tbody>{{PRIORITY_ACTION_ROWS}}</tbody>
              </table>
-             
-             <h2 style="margin-top:8mm;">Go / No-Go Framework</h2>
+         </div>
+         <div class="footer"><span>Confidential</span><span>Page 36</span></div>
+     </div>
+     
+     <!-- 7.2 Go/No-Go (Page 37) -->
+     <div class="page">
+         <div class="header"><div>Strategy</div><div>7.2 Go / No-Go</div></div>
+         <div class="content">
+             <h2>Framework</h2>
              <div class="grid-2">
                  <div class="card" style="border-top:4px solid var(--color-risk-low);">
                      <h3 style="border:none;">Green Light Criteria</h3>
@@ -734,10 +772,10 @@ export const REPORT_TEMPLATE = `
                  </div>
              </div>
          </div>
-         <div class="footer"><span>Confidential</span><span>Page 35</span></div>
+         <div class="footer"><span>Confidential</span><span>Page 37</span></div>
      </div>
 
-     <!-- SECTION 08 (DIRECTOR) -->
+     <!-- SECTION 08 (Page 38) -->
      <div class="page page-section">
           <div class="section-watermark">08</div>
           <div class="section-content">
@@ -747,6 +785,7 @@ export const REPORT_TEMPLATE = `
           </div>
       </div>
       
+      <!-- 8.1 Memo (Page 39) -->
       <div class="page">
           <div class="header"><div>Director Insights</div><div>8.1 Memorandum</div></div>
           <div class="content">
@@ -767,11 +806,18 @@ export const REPORT_TEMPLATE = `
                   <div><strong>REF:</strong> {{REPORT_ID}}</div>
               </div>
               
-              <div class="markdown-content" style="font-size:10pt; line-height:1.7; color:#1e293b; margin-bottom:10mm;">
+              <div class="markdown-content" style="font-size:10pt; line-height:1.7; color:#1e293b;">
                   {{INSIGHTS_NARRATIVE}}
               </div>
-              
-              <h3 style="border:none; margin-bottom:4mm; color:black;">Strategic Mandates</h3>
+          </div>
+          <div class="footer"><span>Confidential</span><span>Page 39</span></div>
+      </div>
+
+      <!-- 8.2 Mandates (Page 40) -->
+      <div class="page">
+          <div class="header"><div>Director Insights</div><div>8.2 Mandates</div></div>
+          <div class="content">
+              <h2>Strategic Mandates</h2>
               <div class="grid-3">
                   {{INSIGHTS_RECS}}
               </div>
@@ -781,7 +827,7 @@ export const REPORT_TEMPLATE = `
                   <div style="font-size:8pt; font-weight:700; text-transform:uppercase;">Digital Signature Verified</div>
               </div>
           </div>
-          <div class="footer"><span>Confidential</span><span>Page 38</span></div>
+          <div class="footer"><span>Confidential</span><span>Page 40</span></div>
       </div>
 
     {{PRODUCT_CONCEPT_IMAGE}}

@@ -550,7 +550,7 @@ export const generateHtmlReport = (report: AssessmentReport): string => {
                   </div>
               </div>
           </div>
-          <div class="footer"><span>Confidential Assessment</span><span>Page 40</span></div>
+          <div class="footer"><span>Confidential Assessment</span><span>Page 42</span></div>
       </div>
       `;
     replace('PRODUCT_CONCEPT_IMAGE', appendixHtml);

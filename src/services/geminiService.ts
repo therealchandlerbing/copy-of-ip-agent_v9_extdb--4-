@@ -384,7 +384,7 @@ OUTPUT JSON FORMAT:
     "monitoringMetrics": [{ "category": "string", "metric": "string", "significance": "string" }],
     "riskIndicators": ["string"],
     "ttoSynthesis": {
-       "insightNarrative": "string (The 'Director's Memo' - blunt, strategic advice, MAXIMUM 200 WORDS. Concise and punchy to fit on 1 page.)",
+       "insightNarrative": "string (The 'Director's Memo' - blunt, strategic advice. EXTENSIVE ANALYSIS (400-600 words). Use highly professional, authoritative tone.)",
        "keyRecommendations": [{ "title": "string", "description": "string", "priority": "Critical|High|Medium" }]
     }
   }
