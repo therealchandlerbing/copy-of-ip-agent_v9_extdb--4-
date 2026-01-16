@@ -427,9 +427,17 @@ Output JSON:
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export class GeminiService {
-  private ai: GoogleGenAI;
+  private ai?: GoogleGenAI;
 
   constructor() {
+    // AI client will be lazily initialized on first use
+  }
+
+  private getAIClient(): GoogleGenAI {
+    if (this.ai) {
+      return this.ai;
+    }
+
     // Access API key from Vite environment variables
     const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -441,7 +449,9 @@ export class GeminiService {
       );
     }
 
-    this.ai = new GoogleGenAI({ apiKey });
+    const client = new GoogleGenAI({ apiKey });
+    this.ai = client;
+    return client;
   }
 
   // Helper to clean JSON string with robust escape handling
@@ -528,7 +538,7 @@ export class GeminiService {
           config.thinkingConfig = { thinkingBudget };
         }
 
-        const response = await this.ai.models.generateContent({
+        const response = await this.getAIClient().models.generateContent({
           model: 'gemini-3-pro-preview',
           contents: `CONTEXT:\n${contextStr}\n\nTASK:\n${promptText}\n\nIMPORTANT: Return valid JSON only. Do not use Markdown block syntax if possible. Escape all special characters in strings (especially backslashes). Ensure deep, investor-grade analysis with high specificity and real data where possible.`,
           config: config
@@ -581,7 +591,7 @@ export class GeminiService {
         }));
         parts.push({ text: EXTRACTION_PROMPT });
 
-        const response = await this.ai.models.generateContent({
+        const response = await this.getAIClient().models.generateContent({
           model: 'gemini-3-pro-preview',
           contents: { parts: parts },
           config: { responseMimeType: "application/json" }
@@ -834,7 +844,7 @@ export class GeminiService {
 
     const fullPrompt = `${historyPrompt}USER QUERY: ${message}`;
 
-    const response = await this.ai.models.generateContent({
+    const response = await this.getAIClient().models.generateContent({
       model: 'gemini-3-flash-preview', // Use Flash for faster chat reasoning
       contents: fullPrompt,
       config: {
@@ -846,7 +856,7 @@ export class GeminiService {
   }
 
   async generateProductConcept(prompt: string, size: '1K' | '2K' | '4K' = '1K'): Promise<string> {
-    const response = await this.ai.models.generateContent({
+    const response = await this.getAIClient().models.generateContent({
       model: 'gemini-3-pro-image-preview',
       contents: {
         parts: [{ text: `Professional industrial design product photography of ${prompt}. Cinematic studio lighting, neutral grey background, 8k resolution, highly detailed, photorealistic, product visualization, commercial photography style.` }]
