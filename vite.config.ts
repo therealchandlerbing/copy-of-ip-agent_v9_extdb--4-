@@ -18,6 +18,21 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
       }
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react')) return 'vendor';
+              if (id.includes('@google/genai')) return 'genai';
+              if (id.includes('jspdf')) return 'pdf';
+              if (id.includes('marked')) return 'utils';
+              // Group other small dependencies if needed, or leave them in index (or vendor)
+            }
+          }
+        }
+      }
     }
   };
 });
