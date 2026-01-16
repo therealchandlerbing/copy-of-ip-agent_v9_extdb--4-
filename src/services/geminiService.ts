@@ -430,10 +430,16 @@ export class GeminiService {
   private ai: GoogleGenAI;
 
   constructor() {
-    // Fallback to dummy key if env var is missing to prevent browser crash on startup
-    const apiKey = (typeof process !== 'undefined' ? process.env.API_KEY : undefined)
-      || (typeof import.meta !== 'undefined' ? import.meta.env?.VITE_GOOGLE_API_KEY : undefined)
-      || 'dummy_key_for_init';
+    // Access API key from Vite environment variables
+    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+
+    if (!apiKey) {
+      throw new Error(
+        'Google API key not found. Please set VITE_GOOGLE_API_KEY in your .env file.\n' +
+        'Create a .env file in the project root with:\n' +
+        'VITE_GOOGLE_API_KEY=your_api_key_here'
+      );
+    }
 
     this.ai = new GoogleGenAI({ apiKey });
   }
